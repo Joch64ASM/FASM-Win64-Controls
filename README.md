@@ -41,6 +41,27 @@ Highlights:
 
 Real EOF/overlay detection is intentionally left for the next evolution.
 
+### TabControl
+
+#### TabControl 1.6.4 — Integrated Controls + Project Links
+
+[`TabControl/TabControl_1.6.4_PROJECT_LINK_FIX.ASM`](TabControl/TabControl_1.6.4_PROJECT_LINK_FIX.ASM)
+
+A larger native TabControl example with four real page windows: Overview, Processes, Files, and Project.
+
+Highlights:
+
+- Native `SysTabControl32` with `TCS_OWNERDRAWFIXED`
+- Dark owner-drawn tab headers
+- TabControl subclass that covers native light-theme chrome while preserving native selection, keyboard, hit testing, and layout behavior
+- Real Processes page with the process ListView, DPI-scaled body/header fonts, dark custom draw, and context menu
+- Real Files page with the lazy filesystem TreeView and borrowed Shell system icons
+- Project page using native ComCtl32 v6 `SysLink` controls
+- Working GitHub profile and repositories links through `ShellExecuteW`
+- DPI-scaled Project-link alignment with the page text
+- Deferred `WM_EXITSIZEMOVE` redraw of the nested Processes page/ListView/Header after interactive resize
+- Per-Monitor V2 DPI handling
+
 ---
 
 More native Win64 control examples will be added as the project grows.
