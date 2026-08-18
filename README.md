@@ -18,11 +18,11 @@ This repository is a learning/reference project built around native Win32 contro
 
 ### ListBox
 
-#### ListBox 1.7 — EOF File Report — Dynamic Box Width
+#### ListBox 1.7 — PE File Report — Dynamic Box Width
 
-[`ListBox/ListBox_1.7_EOF_DYNAMIC_BOX.ASM`](ListBox/ListBox_1.7_EOF_DYNAMIC_BOX.ASM)
+[`ListBox/ListBox_1.7_PE_FILE_REPORT_DYNAMIC_BOX.ASM`](ListBox/ListBox_1.7_PE_FILE_REPORT_DYNAMIC_BOX.ASM)
 
-A practical ListBox showcase built from the earlier control lessons. Drop one file onto the window and the ListBox becomes a dark, scrollable report surface showing file information and basic PE information.
+A practical ListBox usage example built around normal file metadata and the PE/COFF file format. Drop one file onto the window and the ListBox becomes a dark, scrollable report surface showing file information and basic PE information.
 
 Highlights:
 
@@ -39,7 +39,7 @@ Highlights:
 - `LB_SETHORIZONTALEXTENT` for horizontal scrolling when needed
 - Heap-allocated scratch buffers when report rows can exceed the project's static-buffer limit
 
-Real EOF/overlay detection is intentionally left for the next evolution.
+**Scope note:** ListBox 1.7 does not inspect or remove EOF/overlay data. The PE file format is used here as useful real-world data for demonstrating the ListBox control.
 
 ### TabControl
 
