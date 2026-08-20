@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Build the base Win64 window shell in pure FASM x64 using the native Win32 API: window classes, CreateWindowExW, message loops, borderless resizing, painting and DPI handling.">
+<meta name="theme-color" content="#0d1117">
+<title>Tutorial 01 — Building the Base Win64 Window Shell | FASM Win64 Controls</title>
+<style>
+:root{--bg:#0d1117;--soft:#111820;--panel:#151c24;--border:#293442;--border2:#354354;--text:#e6edf3;--softtext:#a9b4c0;--dim:#768390;--accent:#58a6ff;--code:#c9d1d9;--codebg:#090d12;--wide:1180px;--article:790px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at top center,#162231 0,var(--bg) 420px);color:var(--text);font-family:"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,sans-serif;font-size:16px;line-height:1.72}a{color:var(--accent)}.container{width:min(calc(100% - 40px),var(--wide));margin:0 auto}
+.site-header{border-bottom:1px solid var(--border);background:rgba(13,17,23,.92);backdrop-filter:blur(12px)}.header-inner{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px}.brand{display:flex;align-items:center;gap:13px;color:var(--text);text-decoration:none}.brand-mark{width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--border2);border-radius:8px;background:var(--panel);color:var(--accent);font:700 17px Consolas,"Courier New",monospace}.brand-text{font-size:17px;font-weight:650}.nav{display:flex;gap:6px}.nav a{padding:8px 12px;border-radius:6px;color:var(--softtext);text-decoration:none;font-size:14px;font-weight:500}.nav a:hover{color:var(--text);background:var(--panel)}
+.hero{padding:78px 0 58px;border-bottom:1px solid var(--border)}.crumb{margin-bottom:20px;color:var(--dim);font:13px Consolas,"Courier New",monospace}.crumb a{color:var(--softtext);text-decoration:none}.eyebrow{margin-bottom:14px;color:var(--accent);font:600 13px Consolas,"Courier New",monospace;letter-spacing:.9px;text-transform:uppercase}h1{max-width:920px;margin:0 0 22px;font-size:clamp(38px,6vw,64px);line-height:1.08;letter-spacing:-1.9px}.lead{max-width:830px;margin:0 0 26px;color:var(--softtext);font-size:20px}.tags{display:flex;flex-wrap:wrap;gap:8px}.tags span{padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--soft);color:var(--softtext);font:12px Consolas,"Courier New",monospace}
+.layout{display:grid;grid-template-columns:220px minmax(0,var(--article));justify-content:center;gap:56px;padding:58px 0 90px}.toc{position:sticky;top:24px;align-self:start}.toc strong{display:block;margin-bottom:10px;font:700 12px Consolas,"Courier New",monospace;letter-spacing:.8px;text-transform:uppercase}.toc a{display:block;padding:5px 0;color:var(--dim);text-decoration:none;font-size:13px;line-height:1.45}.toc a:hover{color:var(--accent)}article{min-width:0}article section{margin-bottom:62px;scroll-margin-top:28px}article h2{margin:0 0 18px;font-size:30px;line-height:1.25;letter-spacing:-.6px}article h3{margin:32px 0 10px;font-size:20px}article p{margin:0 0 18px;color:var(--softtext)}article strong{color:var(--text)}article code:not(pre code){padding:2px 6px;border:1px solid var(--border);border-radius:5px;background:var(--soft);color:#b9d8ff;font: .92em Consolas,"Courier New",monospace}
+.callout{margin:26px 0;padding:20px 22px;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--soft)}.callout strong{display:block;margin-bottom:7px}.callout p:last-child{margin-bottom:0}.flow{margin:26px 0;padding:22px;border:1px solid var(--border);border-radius:9px;background:#0b1016;color:var(--softtext);font:14px/1.9 Consolas,"Courier New",monospace;white-space:pre-wrap}.codebox{margin:24px 0 28px;border:1px solid var(--border);border-radius:9px;overflow:hidden;background:var(--codebg)}.codehead{display:flex;justify-content:space-between;gap:18px;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--soft);color:var(--dim);font:12px Consolas,"Courier New",monospace}pre{margin:0;padding:18px;overflow-x:auto;color:var(--code);font:13px/1.58 Consolas,"Courier New",monospace;tab-size:8}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:26px 0}.card{padding:18px;border:1px solid var(--border);border-radius:8px;background:var(--soft)}.card strong{display:block;margin-bottom:5px;font:600 13px Consolas,"Courier New",monospace}.card p{margin:0;font-size:14px}.lessons{padding-left:22px;color:var(--softtext)}.lessons li{margin:8px 0}.next{margin-top:72px;padding-top:30px;border-top:1px solid var(--border)}.next small{color:var(--dim);font:12px Consolas,"Courier New",monospace;text-transform:uppercase;letter-spacing:.8px}.next div{margin-top:7px;font-size:20px;font-weight:650}
+footer{padding:34px 0 44px;border-top:1px solid var(--border);color:var(--dim);font-size:13px}.footer-inner{display:flex;justify-content:space-between;gap:20px}.motto{color:var(--softtext);font-family:Consolas,"Courier New",monospace}
+@media(max-width:980px){.layout{grid-template-columns:minmax(0,var(--article))}.toc{position:static;padding-bottom:20px;border-bottom:1px solid var(--border)}.toc nav{columns:2}}@media(max-width:700px){.container{width:min(calc(100% - 28px),var(--wide))}.hero{padding:56px 0 44px}.lead{font-size:18px}.layout{gap:36px;padding:38px 0 64px}.toc nav{columns:1}.grid{grid-template-columns:1fr}article h2{font-size:26px}.footer-inner{flex-direction:column}.nav .hide-small{display:none}}@media(max-width:480px){.brand-text{font-size:15px}.nav{display:none}pre{font-size:12px}}
+</style>
+</head>
+<body>
+<header class="site-header"><div class="container header-inner"><a class="brand" href="../"><span class="brand-mark">64</span><span class="brand-text">FASM Win64 Controls</span></a><nav class="nav" aria-label="Main navigation"><a href="../">Tutorials</a><a class="hide-small" href="https://github.com/Joch64ASM/FASM-Win64-Controls/discussions">Discussions</a><a href="https://github.com/Joch64ASM/FASM-Win64-Controls">GitHub</a></nav></div></header>
+<main>
+<header class="hero"><div class="container"><div class="crumb"><a href="../">FASM Win64 Controls</a> &nbsp;/&nbsp; Window &nbsp;/&nbsp; Tutorial 01</div><div class="eyebrow">Tutorial 01 · Window</div><h1>Building the Base Win64 Window Shell</h1><p class="lead">Before a ListView, TreeView, button or status bar can exist, we need the thing that owns them: a real top-level Windows window, a message loop, a window procedure and a clean set of rules for painting, resizing and DPI changes.</p><div class="tags"><span>FASM x64</span><span>Win32 API</span><span>Unicode W APIs</span><span>WS_POPUP</span><span>Per-Monitor V2 DPI</span><span>Window_1.2_DARK_GRIP_CONTRAST.ASM</span></div></div></header>
+<div class="container layout">
+<aside class="toc"><strong>On this page</strong><nav><a href="#start">1. The starting point</a><a href="#entry">2. Program entry</a><a href="#class">3. Window class</a><a href="#create">4. CreateWindowExW</a><a href="#loop">5. Message loop</a><a href="#proc">6. WindowProc</a><a href="#resize">7. Native resizing</a><a href="#paint">8. Painting</a><a href="#mouse">9. Close &amp; drag</a><a href="#dpi">10. DPI scaling</a><a href="#ownership">11. Ownership</a><a href="#learned">12. What we learned</a></nav></aside>
+<article>
+<section id="start"><h2>1. The starting point</h2><p>This source is intentionally a <strong>window shell</strong>, not a control demo. There are no child controls here. That is useful because every later example can add one new control without also introducing all of the machinery needed to make the parent window exist.</p><div class="callout"><strong>Why does the file say “Window 1.2”?</strong><p>The shell existed first, and the visible bottom-right resize grip was refined afterward. The version number therefore says <code>1.2</code>, but conceptually this is lesson one: the clean base window used underneath the later control examples.</p></div><p>The key design decision is <code>WS_POPUP</code>. A normal framed window asks Windows to draw and manage its standard caption and sizing frame. A popup window removes that normal non-client frame, so this example paints a dark title strip itself and tells USER32 where its invisible resize zones are.</p><div class="flow">our code
+  │
+  ├─ registers a window class
+  ├─ creates a WS_POPUP top-level window
+  ├─ paints the dark shell
+  └─ answers hit-test questions
+          │
+          ▼
+       USER32
+          │
+          ├─ runs the native move loop
+          └─ runs the native resize loop</div></section>
+<section id="entry"><h2>2. Program entry</h2><p>The executable enters at <code>main</code>. The first instruction adjusts the stack before API calls are made, then the process opts into Per-Monitor-V2 DPI awareness.</p><div class="codebox"><div class="codehead"><span>main</span><span>initial setup</span></div><pre><code>main:
+        ; Keep RSP correctly aligned for Win64 calls made through invoke.
+        sub     rsp, 8
+
+        invoke SetProcessDpiAwarenessContext, DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2
+
+        invoke GetModuleHandleW, 0
+        mov     [wc.hInstance], rax
+
+        invoke LoadIconW, 0, IDI_APPLICATION
+        mov     [wc.hIcon], rax
+        mov     [wc.hIconSm], rax
+
+        invoke LoadCursorW, 0, IDC_ARROW
+        mov     [wc.hCursor], rax
+
+        invoke CreateSolidBrush, 001E1E1Eh
+        test    rax, rax
+        jz      error
+        mov     [wc.hbrBackground], rax</code></pre></div><p><code>GetModuleHandleW, 0</code> returns the current executable module handle. That instance handle is stored in the window-class structure and later passed to <code>CreateWindowExW</code>.</p><p>The dark class brush is created by this program, so the program owns it. That ownership matters later during destruction.</p></section>
+<section id="class"><h2>3. Registering the window class</h2><p>Before Windows can create a window of our custom class, USER32 needs a description of that class. The source declares a <code>WNDCLASSEX</code> structure in the data section and points its window-procedure field at <code>WindowProc</code>.</p><div class="codebox"><div class="codehead"><span>.data</span><span>WNDCLASSEX</span></div><pre><code>wc WNDCLASSEX sizeof.WNDCLASSEX, CS_HREDRAW + CS_VREDRAW, WindowProc, 0, 0, NULL, NULL, NULL, COLOR_BTNFACE + 1, NULL, _class, NULL</code></pre></div><p><code>RegisterClassExW</code> does not create a visible window. It registers a recipe: class name, procedure, cursor, icons and other class-wide information.</p><div class="flow">WNDCLASSEX
+     │
+     ▼
+RegisterClassExW
+     │
+     ▼
+USER32 knows the class
+     │
+     ▼
+CreateWindowExW can instantiate it</div></section>
+<section id="create"><h2>4. Creating the top-level window</h2><p>The actual window appears when the program calls <code>CreateWindowExW</code> with the registered class name and the <code>WS_POPUP</code> style.</p><div class="codebox"><div class="codehead"><span>main</span><span>CreateWindowExW</span></div><pre><code>invoke CreateWindowExW, 0, _class, _title,\
+       WS_POPUP,\
+       [WinX], [WinY], [WinW], [WinH],\
+       0, 0, [wc.hInstance], 0
+
+test    rax, rax
+jz      error
+
+mov     [MainWindow], rax</code></pre></div><p>Because <code>WS_POPUP</code> removes the normal caption and sizing frame, the shell must provide its own title-strip painting and hit testing. But it can still ask USER32 to perform the real move and resize operations.</p></section>
+<section id="loop"><h2>5. The message loop</h2><p>A GUI program does not normally poll the mouse and keyboard itself. Windows places messages in the GUI thread's queue, and the application retrieves and dispatches them.</p><div class="codebox"><div class="codehead"><span>main</span><span>message pump</span></div><pre><code>.message_loop:
+        invoke GetMessageW, msg, 0, 0, 0
+        cmp     eax, 1
+        jb      end_loop
+        jne     .message_loop
+
+        invoke TranslateMessage, msg
+        invoke DispatchMessageW, msg
+        jmp     .message_loop</code></pre></div><div class="flow">GetMessageW
+    │
+    ▼
+thread message queue
+    │
+    ├─ TranslateMessage
+    └─ DispatchMessageW
+              │
+              ▼
+         WindowProc</div><p>Later, <code>PostQuitMessage</code> causes the loop to terminate cleanly.</p></section>
+<section id="proc"><h2>6. WindowProc: where Windows talks to us</h2><p>Windows calls <code>WindowProc</code> whenever the window needs to react to a message. Under the Windows x64 calling convention the first four integer or pointer arguments arrive in <code>RCX</code>, <code>RDX</code>, <code>R8</code> and <code>R9</code>.</p><div class="codebox"><div class="codehead"><span>WindowProc</span><span>message dispatch</span></div><pre><code>proc WindowProc uses rbx rsi rdi, hwnd, wmsg, wparam, lparam
+
+        mov     [hwnd], rcx
+        mov     [wmsg], rdx
+        mov     [wparam], r8
+        mov     [lparam], r9
+
+        cmp     [wmsg], WM_PAINT
+        je      .wmpaint
+
+        cmp     [wmsg], WM_LBUTTONDOWN
+        je      .wmlbuttondown
+
+        cmp     [wmsg], WM_NCHITTEST
+        je      .wmnchittest
+
+        cmp     [wmsg], WM_SIZE
+        je      .wmsize
+
+        cmp     [wmsg], WM_DPICHANGED
+        je      .wmdpichanged
+
+        cmp     [wmsg], WM_DESTROY
+        je      .wmdestroy
+
+.default:
+        invoke DefWindowProcW, [hwnd], [wmsg], [wparam], [lparam]</code></pre></div><p>The default path is important. Messages the program does not explicitly handle are forwarded to <code>DefWindowProcW</code>, preserving the standard Windows behavior we have not chosen to replace.</p></section>
+<section id="resize"><h2>7. Native resizing without a standard frame</h2><p>This is the central trick behind the borderless shell. For <code>WM_NCHITTEST</code>, Windows asks: <strong>what part of the window is under this screen coordinate?</strong></p><div class="codebox"><div class="codehead"><span>WM_NCHITTEST</span><span>bottom-right grip</span></div><pre><code>.wmnchittest:
+        ; lParam contains signed 16-bit SCREEN coordinates.
+        movsx   eax, word [lparam]
+        movsx   edx, word [lparam + 2]
+
+        mov     [pt.x], eax
+        mov     [pt.y], edx
+
+        invoke ScreenToClient, [hwnd], pt
+        invoke GetClientRect, [hwnd], rect
+
+        mov     eax, [pt.x]
+        mov     edx, [pt.y]
+
+        ; Test the visible grip first.
+        mov     ecx, [rect.right]
+        sub     ecx, [ScaledGripSize]
+        cmp     eax, ecx
+        jl      .normal_border_test
+
+        mov     ecx, [rect.bottom]
+        sub     ecx, [ScaledGripSize]
+        cmp     edx, ecx
+        jl      .normal_border_test
+
+        mov     eax, HTBOTTOMRIGHT
+        jmp     .finish</code></pre></div><p>The full handler also returns <code>HTLEFT</code>, <code>HTRIGHT</code>, <code>HTTOP</code>, <code>HTBOTTOM</code> and the corner variants. Returning one of these values hands the interaction back to USER32.</p><div class="callout"><strong>The important design idea</strong><p>We are not writing our own resize loop. We define the invisible resize zones; Windows performs the native sizing operation.</p></div><p>The visible grip is tested before the ordinary border because it is deliberately larger. The drawn target and the real mouse target therefore match.</p></section>
+<section id="paint"><h2>8. Painting the dark shell</h2><p><code>WM_PAINT</code> calls <code>PaintWindow</code>. Painting begins with <code>BeginPaint</code> and ends with <code>EndPaint</code>.</p><div class="codebox"><div class="codehead"><span>PaintWindow</span><span>main paint sequence</span></div><pre><code>invoke BeginPaint, [hwnd], ps
+mov     [hdc], rax
+
+invoke GetClientRect, [hwnd], rect
+invoke FillRect, [hdc], rect, [wc.hbrBackground]
+
+; Custom title strip
+mov     dword [rect.left], 0
+mov     dword [rect.top], 0
+mov     eax, [ScaledTitleHeight]
+mov     [rect.bottom], eax
+
+invoke CreateSolidBrush, 00262626h
+mov     [brush], rax
+...
+invoke FillRect, [hdc], rect, [brush]
+invoke DeleteObject, [brush]
+...
+invoke EndPaint, [hwnd], ps</code></pre></div><p>The source paints the dark client background, the custom title strip and close button, and finally three diagonal lines for the bottom-right resize grip.</p><p>The grip itself is only a visual representation. The resize behavior comes from <code>WM_NCHITTEST</code>. Painting describes what the region looks like; hit testing tells Windows what that region means.</p></section>
+<section id="mouse"><h2>9. Close-button and title-drag behavior</h2><p><code>WM_LBUTTONDOWN</code> only reaches this code for client-area clicks. The handler first tests the custom close-button rectangle, then checks whether the click occurred in the title strip.</p><div class="codebox"><div class="codehead"><span>HandleMouseClick</span><span>native caption drag</span></div><pre><code>invoke PostMessageW, [hwnd], WM_CLOSE, 0, 0
+...
+.not_close:
+        mov     eax, [ScaledTitleHeight]
+        cmp     [MouseY], eax
+        jg      .done
+
+        invoke ReleaseCapture
+        invoke SendMessageW, [hwnd], WM_NCLBUTTONDOWN, HTCAPTION, 0</code></pre></div><p>The program does not implement its own drag loop. Sending <code>WM_NCLBUTTONDOWN</code> with <code>HTCAPTION</code> tells USER32 to treat the custom strip like a normal caption. Native move behavior, including snapping, remains in Windows.</p></section>
+<section id="dpi"><h2>10. Per-monitor DPI scaling</h2><p>All shell dimensions begin as 96-DPI design values. <code>UpdateScaledValues</code> recalculates them from that fixed baseline using <code>MulDiv</code>.</p><div class="codebox"><div class="codehead"><span>UpdateScaledValues</span><span>96-DPI baseline</span></div><pre><code>proc UpdateScaledValues
+
+        invoke MulDiv, TITLE_HEIGHT_96, [CurrentDpi], 96
+        mov     [ScaledTitleHeight], eax
+
+        invoke MulDiv, CLOSE_BTN_SIZE_96, [CurrentDpi], 96
+        mov     [ScaledCloseBtnSize], eax
+
+        invoke MulDiv, BORDER_SIZE_96, [CurrentDpi], 96
+        mov     [ScaledBorderSize], eax
+
+        invoke MulDiv, GRIP_SIZE_96, [CurrentDpi], 96
+        mov     [ScaledGripSize], eax
+
+        ret
+endp</code></pre></div><p>Scaling always starts from the original 96-DPI constants rather than repeatedly scaling already-scaled values. That avoids accumulated rounding error when the window moves between monitors.</p><p>On <code>WM_DPICHANGED</code>, the new DPI is stored, the dimensions are recalculated and the rectangle recommended by Windows is applied with <code>SetWindowPos</code>.</p></section>
+<section id="ownership"><h2>11. GDI ownership: delete what you create</h2><p>Native Windows code becomes easier to reason about when handle ownership stays explicit.</p><div class="grid"><div class="card"><strong>CreateSolidBrush / CreatePen</strong><p>The application creates these GDI objects, so the application is responsible for deleting them.</p></div><div class="card"><strong>Selected GDI objects</strong><p>The grip pen is replaced with the previous DC object before <code>DeleteObject</code> is called.</p></div><div class="card"><strong>Class background brush</strong><p>It lives for the shell's lifetime and is released during <code>WM_DESTROY</code>.</p></div><div class="card"><strong>PostQuitMessage</strong><p>It terminates the message loop; it is not a GDI resource and requires no deletion.</p></div></div><div class="codebox"><div class="codehead"><span>WM_DESTROY</span><span>cleanup</span></div><pre><code>.wmdestroy:
+        ; Delete only objects that THIS application created.
+        cmp     [wc.hbrBackground], 0
+        je      .no_background_brush
+
+        invoke DeleteObject, [wc.hbrBackground]
+        mov     [wc.hbrBackground], 0
+
+.no_background_brush:
+        invoke PostQuitMessage, 0
+        xor     eax, eax</code></pre></div></section>
+<section id="learned"><h2>12. What we learned</h2><p>Even an “empty” native window already teaches most of the machinery that every later control example depends on.</p><ul class="lessons"><li>A custom window class connects a class name to a window procedure and shared class resources.</li><li><code>CreateWindowExW</code> creates the actual top-level window.</li><li>The thread message queue is the central event-delivery mechanism.</li><li><code>WindowProc</code> handles selected messages and forwards the rest to <code>DefWindowProcW</code>.</li><li>A borderless <code>WS_POPUP</code> can still use native Windows move and resize behavior.</li><li>Painting and hit testing are separate responsibilities.</li><li>DPI measurements are recalculated from a stable 96-DPI baseline.</li><li>GDI object ownership must remain explicit.</li></ul><div class="next"><small>Next step</small><div>Painting text on the window — before adding the first child control.</div></div></section>
+</article>
+</div>
+</main>
+<footer><div class="container footer-inner"><div>FASM Win64 Controls</div><div class="motto">Pure FASM x64 · Native Win32 · No frameworks</div></div></footer>
+</body>
+</html>
