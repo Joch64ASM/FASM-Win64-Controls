@@ -1,940 +1,375 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <meta name="description"
-          content="FASM Win64 Controls — native Windows GUI programming tutorials and reference examples written in pure FASM x64 using the Win32 API.">
-
-    <meta name="theme-color"
-          content="#0d1117">
-
-    <title>FASM Win64 Controls</title>
-
-    <style>
-        /* ------------------------------------------------------------
-           FASM Win64 Controls
-           Initial GitHub Pages homepage
-
-           Everything is deliberately kept in this one file for now.
-           Once the site grows, the CSS can move into style.css.
-           ------------------------------------------------------------ */
-
-        :root
-        {
-            --background:       #0d1117;
-            --background-soft:  #111820;
-            --panel:            #151c24;
-            --panel-hover:      #19232e;
-
-            --border:           #293442;
-            --border-light:     #354354;
-
-            --text:             #e6edf3;
-            --text-soft:        #a9b4c0;
-            --text-dim:         #768390;
-
-            --accent:           #58a6ff;
-            --accent-soft:      #1f6feb;
-            --accent-dark:      #0d419d;
-
-            --code:             #79c0ff;
-
-            --content-width:    1120px;
-        }
-
-        *
-        {
-            box-sizing: border-box;
-        }
-
-        html
-        {
-            scroll-behavior: smooth;
-        }
-
-        body
-        {
-            margin: 0;
-
-            background:
-                radial-gradient(
-                    circle at top center,
-                    #162231 0,
-                    var(--background) 420px
-                );
-
-            color: var(--text);
-
-            font-family:
-                "Segoe UI",
-                system-ui,
-                -apple-system,
-                BlinkMacSystemFont,
-                sans-serif;
-
-            font-size: 16px;
-            line-height: 1.65;
-        }
-
-        a
-        {
-            color: inherit;
-        }
-
-        .container
-        {
-            width: min(
-                calc(100% - 40px),
-                var(--content-width)
-            );
-
-            margin: 0 auto;
-        }
-
-        .site-header
-        {
-            border-bottom: 1px solid var(--border);
-
-            background:
-                rgba(13, 17, 23, 0.88);
-
-            backdrop-filter: blur(12px);
-        }
-
-        .header-inner
-        {
-            min-height: 72px;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            gap: 24px;
-        }
-
-        .brand
-        {
-            display: flex;
-            align-items: center;
-
-            gap: 13px;
-
-            text-decoration: none;
-        }
-
-        .brand-mark
-        {
-            width: 38px;
-            height: 38px;
-
-            display: grid;
-            place-items: center;
-
-            border: 1px solid var(--border-light);
-            border-radius: 8px;
-
-            background: var(--panel);
-
-            color: var(--accent);
-
-            font-family:
-                Consolas,
-                "Courier New",
-                monospace;
-
-            font-weight: 700;
-            font-size: 17px;
-        }
-
-        .brand-text
-        {
-            font-size: 17px;
-            font-weight: 650;
-
-            letter-spacing: 0.1px;
-        }
-
-        .main-nav
-        {
-            display: flex;
-            align-items: center;
-
-            gap: 6px;
-        }
-
-        .main-nav a
-        {
-            padding: 8px 12px;
-
-            border-radius: 6px;
-
-            color: var(--text-soft);
-
-            text-decoration: none;
-
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .main-nav a:hover
-        {
-            color: var(--text);
-            background: var(--panel);
-        }
-
-        .hero
-        {
-            padding:
-                105px 0
-                90px;
-        }
-
-        .hero-label
-        {
-            margin-bottom: 18px;
-
-            color: var(--accent);
-
-            font-family:
-                Consolas,
-                "Courier New",
-                monospace;
-
-            font-size: 14px;
-            font-weight: 600;
-
-            letter-spacing: 0.6px;
-        }
-
-        .hero h1
-        {
-            max-width: 820px;
-
-            margin:
-                0 0
-                24px;
-
-            font-size:
-                clamp(
-                    42px,
-                    7vw,
-                    72px
-                );
-
-            line-height: 1.08;
-
-            letter-spacing: -2.2px;
-        }
-
-        .hero h1 span
-        {
-            color: var(--accent);
-        }
-
-        .hero-description
-        {
-            max-width: 760px;
-
-            margin:
-                0 0
-                30px;
-
-            color: var(--text-soft);
-
-            font-size: 20px;
-            line-height: 1.65;
-        }
-
-        .hero-description strong
-        {
-            color: var(--text);
-            font-weight: 600;
-        }
-
-        .badges
-        {
-            display: flex;
-            flex-wrap: wrap;
-
-            gap: 9px;
-
-            margin-bottom: 38px;
-        }
-
-        .badge
-        {
-            padding:
-                6px 11px;
-
-            border: 1px solid var(--border);
-            border-radius: 6px;
-
-            background: rgba(21, 28, 36, 0.8);
-
-            color: var(--text-soft);
-
-            font-family:
-                Consolas,
-                "Courier New",
-                monospace;
-
-            font-size: 13px;
-        }
-
-        .hero-actions
-        {
-            display: flex;
-            flex-wrap: wrap;
-
-            gap: 12px;
-        }
-
-        .button
-        {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-
-            min-height: 42px;
-
-            padding:
-                9px 16px;
-
-            border: 1px solid var(--border-light);
-            border-radius: 7px;
-
-            background: var(--panel);
-
-            color: var(--text);
-
-            text-decoration: none;
-
-            font-size: 14px;
-            font-weight: 600;
-
-            transition:
-                background 120ms ease,
-                border-color 120ms ease;
-        }
-
-        .button:hover
-        {
-            background: var(--panel-hover);
-            border-color: #4b5c70;
-        }
-
-        .button-primary
-        {
-            border-color: var(--accent-soft);
-
-            background: var(--accent-soft);
-
-            color: #ffffff;
-        }
-
-        .button-primary:hover
-        {
-            background: #2b7bdc;
-            border-color: #2b7bdc;
-        }
-
-        section
-        {
-            padding:
-                82px 0;
-        }
-
-        .section-border
-        {
-            border-top: 1px solid var(--border);
-        }
-
-        .section-kicker
-        {
-            margin:
-                0 0
-                8px;
-
-            color: var(--accent);
-
-            font-family:
-                Consolas,
-                "Courier New",
-                monospace;
-
-            font-size: 13px;
-            font-weight: 600;
-
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .section-title
-        {
-            margin:
-                0 0
-                12px;
-
-            font-size: 34px;
-            line-height: 1.2;
-
-            letter-spacing: -0.7px;
-        }
-
-        .section-description
-        {
-            max-width: 720px;
-
-            margin:
-                0 0
-                38px;
-
-            color: var(--text-soft);
-
-            font-size: 17px;
-        }
-
-        .principles
-        {
-            display: grid;
-
-            grid-template-columns:
-                repeat(3, 1fr);
-
-            gap: 18px;
-        }
-
-        .principle
-        {
-            padding: 24px;
-
-            border: 1px solid var(--border);
-            border-radius: 10px;
-
-            background: var(--background-soft);
-        }
-
-        .principle-number
-        {
-            margin-bottom: 18px;
-
-            color: var(--accent);
-
-            font-family:
-                Consolas,
-                "Courier New",
-                monospace;
-
-            font-size: 13px;
-        }
-
-        .principle h3
-        {
-            margin:
-                0 0
-                8px;
-
-            font-size: 18px;
-        }
-
-        .principle p
-        {
-            margin: 0;
-
-            color: var(--text-soft);
-
-            font-size: 15px;
-        }
-
-        .tutorial-list
-        {
-            display: grid;
-
-            gap: 14px;
-        }
-
-        .tutorial-card
-        {
-            display: grid;
-
-            grid-template-columns:
-                82px
-                1fr
-                auto;
-
-            align-items: center;
-
-            gap: 22px;
-
-            padding:
-                22px 24px;
-
-            border: 1px solid var(--border);
-            border-radius: 10px;
-
-            background: var(--background-soft);
-
-            text-decoration: none;
-
-            transition:
-                background 120ms ease,
-                border-color 120ms ease,
-                transform 120ms ease;
-        }
-
-        .tutorial-card:hover
-        {
-            background: var(--panel-hover);
-            border-color: var(--border-light);
-
-            transform:
-                translateY(-1px);
-        }
-
-        .tutorial-index
-        {
-            color: var(--accent);
-
-            font-family:
-                Consolas,
-                "Courier New",
-                monospace;
-
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        .tutorial-type
-        {
-            display: block;
-
-            margin-bottom: 3px;
-
-            color: var(--text-dim);
-
-            font-family:
-                Consolas,
-                "Courier New",
-                monospace;
-
-            font-size: 12px;
-
-            text-transform: uppercase;
-            letter-spacing: 0.9px;
-        }
-
-        .tutorial-title
-        {
-            margin: 0;
-
-            color: var(--text);
-
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .tutorial-description
-        {
-            margin:
-                4px 0
-                0;
-
-            color: var(--text-soft);
-
-            font-size: 14px;
-        }
-
-        .tutorial-state
-        {
-            color: var(--text-dim);
-
-            font-family:
-                Consolas,
-                "Courier New",
-                monospace;
-
-            font-size: 13px;
-
-            white-space: nowrap;
-        }
-
-        .tutorial-state.available
-        {
-            color: var(--accent);
-        }
-
-        .code-callout
-        {
-            padding: 28px;
-
-            border:
-                1px solid
-                var(--border);
-
-            border-left:
-                3px solid
-                var(--accent);
-
-            border-radius: 8px;
-
-            background: #0b1016;
-
-            font-family:
-                Consolas,
-                "Courier New",
-                monospace;
-
-            color: var(--code);
-
-            font-size: 15px;
-            line-height: 1.8;
-        }
-
-        .code-callout .comment
-        {
-            color: #7d8b99;
-        }
-
-        .site-footer
-        {
-            padding:
-                34px 0
-                44px;
-
-            border-top: 1px solid var(--border);
-
-            color: var(--text-dim);
-
-            font-size: 13px;
-        }
-
-        .footer-inner
-        {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            gap: 20px;
-        }
-
-        .footer-motto
-        {
-            font-family:
-                Consolas,
-                "Courier New",
-                monospace;
-
-            color: var(--text-soft);
-        }
-
-        @media (max-width: 780px)
-        {
-            .header-inner
-            {
-                min-height: 66px;
-            }
-
-            .main-nav .hide-small
-            {
-                display: none;
-            }
-
-            .hero
-            {
-                padding:
-                    75px 0
-                    65px;
-            }
-
-            .hero h1
-            {
-                letter-spacing: -1.5px;
-            }
-
-            .hero-description
-            {
-                font-size: 18px;
-            }
-
-            .principles
-            {
-                grid-template-columns: 1fr;
-            }
-
-            .tutorial-card
-            {
-                grid-template-columns:
-                    58px
-                    1fr;
-
-                gap: 14px;
-            }
-
-            .tutorial-state
-            {
-                grid-column: 2;
-
-                margin-top: 4px;
-            }
-
-            .footer-inner
-            {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-        }
-
-        @media (max-width: 520px)
-        {
-            .container
-            {
-                width:
-                    min(
-                        calc(100% - 28px),
-                        var(--content-width)
-                    );
-            }
-
-            .brand-text
-            {
-                font-size: 15px;
-            }
-
-            .main-nav
-            {
-                display: none;
-            }
-
-            .hero
-            {
-                padding:
-                    58px 0
-                    54px;
-            }
-
-            section
-            {
-                padding:
-                    60px 0;
-            }
-
-            .section-title
-            {
-                font-size: 28px;
-            }
-
-            .tutorial-card
-            {
-                padding:
-                    19px 18px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="FASM Win64 Controls — native Windows GUI programming tutorials and reference examples written in pure FASM x64 using the Win32 API.">
+<meta name="theme-color" content="#0d1117">
+<title>FASM Win64 Controls</title>
+<style>
+:root{
+    --background:#0d1117;
+    --background-soft:#111820;
+    --panel:#151c24;
+    --panel-hover:#19232e;
+    --border:#293442;
+    --border-light:#354354;
+    --text:#e6edf3;
+    --text-soft:#a9b4c0;
+    --text-dim:#768390;
+    --accent:#58a6ff;
+    --accent-soft:#1f6feb;
+    --accent-dark:#0d419d;
+    --code:#79c0ff;
+    --content-width:1120px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+    margin:0;
+    background:radial-gradient(circle at top center,#162231 0,var(--background) 420px);
+    color:var(--text);
+    font-family:"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+    font-size:16px;
+    line-height:1.65;
+}
+a{color:inherit}
+.container{width:min(calc(100% - 40px),var(--content-width));margin:0 auto}
+.site-header{
+    border-bottom:1px solid var(--border);
+    background:rgba(13,17,23,.88);
+    backdrop-filter:blur(12px);
+}
+.header-inner{
+    min-height:72px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:24px;
+}
+.brand{display:flex;align-items:center;gap:13px;text-decoration:none}
+.brand-mark{
+    width:38px;height:38px;display:grid;place-items:center;
+    border:1px solid var(--border-light);border-radius:8px;
+    background:var(--panel);color:var(--accent);
+    font:700 17px Consolas,"Courier New",monospace;
+}
+.brand-text{font-size:17px;font-weight:650;letter-spacing:.1px}
+.main-nav{display:flex;align-items:center;gap:6px}
+.main-nav a{
+    padding:8px 12px;border-radius:6px;color:var(--text-soft);
+    text-decoration:none;font-size:14px;font-weight:500;
+}
+.main-nav a:hover{color:var(--text);background:var(--panel)}
+
+.hero{padding:105px 0 90px}
+.hero-grid{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) 410px;
+    align-items:center;
+    gap:44px;
+}
+.hero-copy{min-width:0}
+.hero-label{
+    margin-bottom:18px;color:var(--accent);
+    font:600 14px Consolas,"Courier New",monospace;
+    letter-spacing:.6px;
+}
+.hero h1{
+    max-width:820px;margin:0 0 24px;
+    font-size:clamp(42px,7vw,72px);
+    line-height:1.08;letter-spacing:-2.2px;
+}
+.hero h1 span{color:var(--accent)}
+.hero-description{
+    max-width:760px;margin:0 0 30px;color:var(--text-soft);
+    font-size:20px;line-height:1.65;
+}
+.hero-description strong{color:var(--text);font-weight:600}
+.hero-art{
+    display:flex;align-items:center;justify-content:center;
+    min-width:0;
+}
+.hero-art img{
+    width:100%;max-width:410px;height:auto;display:block;
+    opacity:.96;
+    mix-blend-mode:screen;
+    -webkit-mask-image:radial-gradient(circle at center,#000 58%,rgba(0,0,0,.96) 72%,transparent 100%);
+    mask-image:radial-gradient(circle at center,#000 58%,rgba(0,0,0,.96) 72%,transparent 100%);
+    filter:drop-shadow(0 0 18px rgba(88,166,255,.20))
+           drop-shadow(0 0 40px rgba(88,166,255,.11));
+}
+.badges{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:38px}
+.badge{
+    padding:6px 11px;border:1px solid var(--border);border-radius:6px;
+    background:rgba(21,28,36,.8);color:var(--text-soft);
+    font:13px Consolas,"Courier New",monospace;
+}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px}
+.button{
+    display:inline-flex;align-items:center;justify-content:center;
+    min-height:42px;padding:9px 16px;
+    border:1px solid var(--border-light);border-radius:7px;
+    background:var(--panel);color:var(--text);text-decoration:none;
+    font-size:14px;font-weight:600;
+    transition:background 120ms ease,border-color 120ms ease;
+}
+.button:hover{background:var(--panel-hover);border-color:#4b5c70}
+.button-primary{border-color:var(--accent-soft);background:var(--accent-soft);color:#fff}
+.button-primary:hover{background:#2b7bdc;border-color:#2b7bdc}
+
+section{padding:82px 0}
+.section-border{border-top:1px solid var(--border)}
+.section-kicker{
+    margin:0 0 8px;color:var(--accent);
+    font:600 13px Consolas,"Courier New",monospace;
+    text-transform:uppercase;letter-spacing:1px;
+}
+.section-title{margin:0 0 12px;font-size:34px;line-height:1.2;letter-spacing:-.7px}
+.section-description{max-width:720px;margin:0 0 38px;color:var(--text-soft);font-size:17px}
+.principles{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.principle{
+    padding:24px;border:1px solid var(--border);border-radius:10px;
+    background:var(--background-soft);
+}
+.principle-number{
+    margin-bottom:18px;color:var(--accent);
+    font:13px Consolas,"Courier New",monospace;
+}
+.principle h3{margin:0 0 8px;font-size:18px}
+.principle p{margin:0;color:var(--text-soft);font-size:15px}
+
+.tutorial-list{display:grid;gap:14px}
+.tutorial-card{
+    display:grid;grid-template-columns:82px 1fr auto;align-items:center;
+    gap:22px;padding:22px 24px;
+    border:1px solid var(--border);border-radius:10px;
+    background:var(--background-soft);text-decoration:none;
+    transition:background 120ms ease,border-color 120ms ease,transform 120ms ease;
+}
+.tutorial-card:hover{
+    background:var(--panel-hover);border-color:var(--border-light);
+    transform:translateY(-1px);
+}
+.tutorial-index{
+    color:var(--accent);
+    font:600 15px Consolas,"Courier New",monospace;
+}
+.tutorial-type{
+    display:block;margin-bottom:3px;color:var(--text-dim);
+    font:12px Consolas,"Courier New",monospace;
+    text-transform:uppercase;letter-spacing:.9px;
+}
+.tutorial-title{margin:0;color:var(--text);font-size:18px;font-weight:600}
+.tutorial-description{margin:4px 0 0;color:var(--text-soft);font-size:14px}
+.tutorial-state{
+    color:var(--text-dim);
+    font:13px Consolas,"Courier New",monospace;
+    white-space:nowrap;
+}
+.tutorial-state.available{color:var(--accent)}
+
+.code-callout{
+    padding:28px;border:1px solid var(--border);border-left:3px solid var(--accent);
+    border-radius:8px;background:#0b1016;
+    font:15px/1.8 Consolas,"Courier New",monospace;color:var(--code);
+}
+.code-callout .comment{color:#7d8b99}
+.site-footer{
+    padding:34px 0 44px;border-top:1px solid var(--border);
+    color:var(--text-dim);font-size:13px;
+}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.footer-motto{font-family:Consolas,"Courier New",monospace;color:var(--text-soft)}
+
+@media(max-width:900px){
+    .hero-grid{grid-template-columns:minmax(0,1fr) 330px;gap:30px}
+    .hero-art img{max-width:330px}
+}
+@media(max-width:780px){
+    .header-inner{min-height:66px}
+    .main-nav .hide-small{display:none}
+    .hero{padding:75px 0 65px}
+    .hero-grid{grid-template-columns:1fr;gap:28px}
+    .hero-copy{order:1}
+    .hero-art{order:2;justify-content:flex-start}
+    .hero-art img{max-width:320px}
+    .hero h1{letter-spacing:-1.5px}
+    .hero-description{font-size:18px}
+    .principles{grid-template-columns:1fr}
+    .tutorial-card{grid-template-columns:58px 1fr;gap:14px}
+    .tutorial-state{grid-column:2;margin-top:4px}
+    .footer-inner{flex-direction:column;align-items:flex-start}
+}
+@media(max-width:520px){
+    .container{width:min(calc(100% - 28px),var(--content-width))}
+    .brand-text{font-size:15px}
+    .main-nav{display:none}
+    .hero{padding:58px 0 54px}
+    .hero-art img{max-width:260px}
+    section{padding:60px 0}
+    .section-title{font-size:28px}
+    .tutorial-card{padding:19px 18px}
+}
+</style>
 </head>
-
 <body>
+<header class="site-header">
+    <div class="container header-inner">
+        <a class="brand" href="./">
+            <span class="brand-mark">64</span>
+            <span class="brand-text">FASM Win64 Controls</span>
+        </a>
+        <nav class="main-nav" aria-label="Main navigation">
+            <a href="#tutorials">Tutorials</a>
+            <a class="hide-small" href="https://github.com/Joch64ASM/FASM-Win64-Controls/discussions">Discussions</a>
+            <a href="https://github.com/Joch64ASM/FASM-Win64-Controls">GitHub</a>
+        </nav>
+    </div>
+</header>
 
-    <header class="site-header">
-        <div class="container header-inner">
-            <a class="brand" href="./">
-                <span class="brand-mark">64</span>
-                <span class="brand-text">FASM Win64 Controls</span>
+<main>
+<section class="hero">
+    <div class="container hero-grid">
+        <div class="hero-copy">
+            <div class="hero-label">PURE FASM X64 · NATIVE WIN32</div>
+            <h1>Native Windows programming, <span>from the metal up.</span></h1>
+            <p class="hero-description">
+                Learn native Windows GUI programming using
+                <strong>pure FASM x64 and the Win32 API</strong>.
+                The examples don't only show which code to write —
+                they explain why Windows behaves the way it does.
+            </p>
+            <div class="badges">
+                <span class="badge">FASM</span>
+                <span class="badge">x86-64</span>
+                <span class="badge">Win64</span>
+                <span class="badge">Win32 API</span>
+                <span class="badge">Unicode</span>
+                <span class="badge">Common Controls</span>
+                <span class="badge">DPI Aware</span>
+            </div>
+            <div class="hero-actions">
+                <a class="button button-primary" href="#tutorials">Explore the tutorials</a>
+                <a class="button" href="https://github.com/Joch64ASM/FASM-Win64-Controls">View source on GitHub</a>
+            </div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+            <img src="images/fasm-x64-logo.webp"
+                 alt=""
+                 width="1024"
+                 height="1024"
+                 decoding="async"
+                 fetchpriority="high">
+        </div>
+    </div>
+</section>
+
+<section class="section-border">
+    <div class="container">
+        <p class="section-kicker">Philosophy</p>
+        <h2 class="section-title">Understand the API, not just the example.</h2>
+        <p class="section-description">
+            Every example is intended to compile, run and teach.
+            The project stays close to Windows itself rather than
+            hiding the operating system behind a framework.
+        </p>
+        <div class="principles">
+            <article class="principle">
+                <div class="principle-number">01 / NATIVE</div>
+                <h3>No GUI framework</h3>
+                <p>Native Win32 windows, messages, controls, GDI and Common Controls directly from FASM x64.</p>
+            </article>
+            <article class="principle">
+                <div class="principle-number">02 / EXPLAINED</div>
+                <h3>Why Windows does it</h3>
+                <p>Message routing, ownership, notification structures, painting and ABI rules are explained instead of treated as magic.</p>
+            </article>
+            <article class="principle">
+                <div class="principle-number">03 / MODERN</div>
+                <h3>Win64 first</h3>
+                <p>Unicode APIs, the Windows x64 calling convention, DPI awareness and modern native control techniques.</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section id="tutorials" class="section-border">
+    <div class="container">
+        <p class="section-kicker">Tutorials</p>
+        <h2 class="section-title">Build Windows controls one layer at a time.</h2>
+        <p class="section-description">
+            Each subject grows from a small working example into
+            something practical while keeping the native Windows behaviour visible.
+        </p>
+        <div class="tutorial-list">
+            <a class="tutorial-card" href="window/01-base-window-shell.html">
+                <div class="tutorial-index">01</div>
+                <div>
+                    <span class="tutorial-type">Window</span>
+                    <h3 class="tutorial-title">Creating a Native Win64 Window</h3>
+                    <p class="tutorial-description">Window classes, WndProc, message loops, painting, resizing and native child controls.</p>
+                </div>
+                <div class="tutorial-state available">read tutorial →</div>
             </a>
 
-            <nav class="main-nav" aria-label="Main navigation">
-                <a href="#tutorials">Tutorials</a>
-                <a class="hide-small" href="https://github.com/Joch64ASM/FASM-Win64-Controls/discussions">Discussions</a>
-                <a href="https://github.com/Joch64ASM/FASM-Win64-Controls">GitHub</a>
-            </nav>
+            <a class="tutorial-card" href="https://github.com/Joch64ASM/FASM-Win64-Controls/tree/main/ListBox">
+                <div class="tutorial-index">02</div>
+                <div>
+                    <span class="tutorial-type">ListBox</span>
+                    <h3 class="tutorial-title">Owner-Drawn File &amp; PE Report</h3>
+                    <p class="tutorial-description">Unicode rows, owner drawing, drag-and-drop, horizontal scrolling and PE information.</p>
+                </div>
+                <div class="tutorial-state available">source available →</div>
+            </a>
+
+            <a class="tutorial-card" href="https://github.com/Joch64ASM/FASM-Win64-Controls/tree/main/TabControl">
+                <div class="tutorial-index">03</div>
+                <div>
+                    <span class="tutorial-type">TabControl</span>
+                    <h3 class="tutorial-title">Native Pages &amp; Integrated Controls</h3>
+                    <p class="tutorial-description">Owner-drawn tabs, page windows, nested controls, SysLink integration and DPI-aware layout.</p>
+                </div>
+                <div class="tutorial-state available">source available →</div>
+            </a>
+
+            <div class="tutorial-card">
+                <div class="tutorial-index">++</div>
+                <div>
+                    <span class="tutorial-type">Coming next</span>
+                    <h3 class="tutorial-title">ListView · TreeView · StatusBar · Toolbar</h3>
+                    <p class="tutorial-description">More native Win64 controls will be added as the project grows.</p>
+                </div>
+                <div class="tutorial-state">work in progress</div>
+            </div>
         </div>
-    </header>
+    </div>
+</section>
 
-    <main>
-
-        <section class="hero">
-            <div class="container">
-                <div class="hero-label">PURE FASM X64 · NATIVE WIN32</div>
-
-                <h1>
-                    Native Windows programming,
-                    <span>from the metal up.</span>
-                </h1>
-
-                <p class="hero-description">
-                    Learn native Windows GUI programming using
-                    <strong>pure FASM x64 and the Win32 API</strong>.
-                    The examples don't only show which code to write —
-                    they explain why Windows behaves the way it does.
-                </p>
-
-                <div class="badges">
-                    <span class="badge">FASM</span>
-                    <span class="badge">x86-64</span>
-                    <span class="badge">Win64</span>
-                    <span class="badge">Win32 API</span>
-                    <span class="badge">Unicode</span>
-                    <span class="badge">Common Controls</span>
-                    <span class="badge">DPI Aware</span>
-                </div>
-
-                <div class="hero-actions">
-                    <a class="button button-primary" href="#tutorials">Explore the tutorials</a>
-                    <a class="button" href="https://github.com/Joch64ASM/FASM-Win64-Controls">View source on GitHub</a>
-                </div>
-            </div>
-        </section>
-
-        <section class="section-border">
-            <div class="container">
-                <p class="section-kicker">Philosophy</p>
-
-                <h2 class="section-title">Understand the API, not just the example.</h2>
-
-                <p class="section-description">
-                    Every example is intended to compile, run and teach.
-                    The project stays close to Windows itself rather than
-                    hiding the operating system behind a framework.
-                </p>
-
-                <div class="principles">
-                    <article class="principle">
-                        <div class="principle-number">01 / NATIVE</div>
-                        <h3>No GUI framework</h3>
-                        <p>
-                            Native Win32 windows, messages, controls,
-                            GDI and Common Controls directly from
-                            FASM x64.
-                        </p>
-                    </article>
-
-                    <article class="principle">
-                        <div class="principle-number">02 / EXPLAINED</div>
-                        <h3>Why Windows does it</h3>
-                        <p>
-                            Message routing, ownership, notification
-                            structures, painting and ABI rules are
-                            explained instead of treated as magic.
-                        </p>
-                    </article>
-
-                    <article class="principle">
-                        <div class="principle-number">03 / MODERN</div>
-                        <h3>Win64 first</h3>
-                        <p>
-                            Unicode APIs, the Windows x64 calling
-                            convention, DPI awareness and modern
-                            native control techniques.
-                        </p>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <section id="tutorials" class="section-border">
-            <div class="container">
-                <p class="section-kicker">Tutorials</p>
-
-                <h2 class="section-title">Build Windows controls one layer at a time.</h2>
-
-                <p class="section-description">
-                    Each subject grows from a small working example into
-                    something practical while keeping the native Windows
-                    behaviour visible.
-                </p>
-
-                <div class="tutorial-list">
-                    <a class="tutorial-card" href="window/01-base-window-shell.html">
-                        <div class="tutorial-index">01</div>
-                        <div>
-                            <span class="tutorial-type">Window</span>
-                            <h3 class="tutorial-title">Creating a Native Win64 Window</h3>
-                            <p class="tutorial-description">
-                                Window classes, WndProc, message loops,
-                                painting, resizing and native child controls.
-                            </p>
-                        </div>
-                        <div class="tutorial-state available">read tutorial →</div>
-                    </a>
-
-                    <a class="tutorial-card" href="https://github.com/Joch64ASM/FASM-Win64-Controls/tree/main/ListBox">
-                        <div class="tutorial-index">02</div>
-                        <div>
-                            <span class="tutorial-type">ListBox</span>
-                            <h3 class="tutorial-title">Owner-Drawn File &amp; PE Report</h3>
-                            <p class="tutorial-description">
-                                Unicode rows, owner drawing, drag-and-drop,
-                                horizontal scrolling and PE information.
-                            </p>
-                        </div>
-                        <div class="tutorial-state available">source available →</div>
-                    </a>
-
-                    <a class="tutorial-card" href="https://github.com/Joch64ASM/FASM-Win64-Controls/tree/main/TabControl">
-                        <div class="tutorial-index">03</div>
-                        <div>
-                            <span class="tutorial-type">TabControl</span>
-                            <h3 class="tutorial-title">Native Pages &amp; Integrated Controls</h3>
-                            <p class="tutorial-description">
-                                Owner-drawn tabs, page windows, nested controls,
-                                SysLink integration and DPI-aware layout.
-                            </p>
-                        </div>
-                        <div class="tutorial-state available">source available →</div>
-                    </a>
-
-                    <div class="tutorial-card">
-                        <div class="tutorial-index">++</div>
-                        <div>
-                            <span class="tutorial-type">Coming next</span>
-                            <h3 class="tutorial-title">ListView · TreeView · StatusBar · Toolbar</h3>
-                            <p class="tutorial-description">
-                                More native Win64 controls will be added as
-                                the project grows.
-                            </p>
-                        </div>
-                        <div class="tutorial-state">work in progress</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="section-border">
-            <div class="container">
-                <p class="section-kicker">The rule</p>
-
-                <h2 class="section-title">Nothing important gets hidden.</h2>
-
-                <p class="section-description">
-                    When Windows sends a message, fills a structure,
-                    changes a control state or expects an x64 ABI rule,
-                    we want to understand the mechanism rather than
-                    simply wrap it away.
-                </p>
-
-                <div class="code-callout">
-                    <span class="comment">; The project in one sentence:</span>
-                    <br>
-                    Pure FASM x64.
-                    Native Win32.
-                    No frameworks.
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <footer class="site-footer">
-        <div class="container footer-inner">
-            <div>FASM Win64 Controls</div>
-            <div class="footer-motto">Pure FASM x64 · Native Win32 · No frameworks</div>
+<section class="section-border">
+    <div class="container">
+        <p class="section-kicker">The rule</p>
+        <h2 class="section-title">Nothing important gets hidden.</h2>
+        <p class="section-description">
+            When Windows sends a message, fills a structure,
+            changes a control state or expects an x64 ABI rule,
+            we want to understand the mechanism rather than simply wrap it away.
+        </p>
+        <div class="code-callout">
+            <span class="comment">; The project in one sentence:</span><br>
+            Pure FASM x64.
+            Native Win32.
+            No frameworks.
         </div>
-    </footer>
+    </div>
+</section>
+</main>
 
+<footer class="site-footer">
+    <div class="container footer-inner">
+        <div>FASM Win64 Controls</div>
+        <div class="footer-motto">Pure FASM x64 · Native Win32 · No frameworks</div>
+    </div>
+</footer>
 </body>
-
 </html>
