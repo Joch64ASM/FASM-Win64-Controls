@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Keep a native Win64 BUTTON while taking over only its appearance with BS_OWNERDRAW, WM_DRAWITEM, DRAWITEMSTRUCT and native button state in pure FASM x64.">
+<meta name="theme-color" content="#0d1117">
+<title>Tutorial 04 — Owner-Drawn Dark Button | FASM Win64 Controls</title>
+<style>
+:root{--bg:#0d1117;--soft:#111820;--panel:#151c24;--border:#293442;--border2:#354354;--text:#e6edf3;--article:#c7d4e2;--dim:#768390;--accent:#58a6ff;--code:#d9ecff;--codebg:#101925;--wide:1180px;--aw:790px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(circle at top center,#162231 0,var(--bg) 420px);color:var(--text);font:16px/1.72 "Segoe UI",system-ui,sans-serif}
+a{color:var(--accent)}.container{width:min(calc(100% - 40px),var(--wide));margin:auto}
+.site-header{border-bottom:1px solid var(--border);background:rgba(13,17,23,.92)}
+.header-inner{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:flex;align-items:center;gap:13px;color:var(--text);text-decoration:none}
+.brand-mark{width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--border2);border-radius:8px;background:var(--panel);color:var(--accent);font:700 17px Consolas,monospace}
+.brand-text{font-size:17px;font-weight:650}.nav{display:flex;gap:6px}
+.nav a{padding:8px 12px;border-radius:6px;color:#a9b4c0;text-decoration:none;font-size:14px}.nav a:hover{color:var(--text);background:var(--panel)}
+.hero{padding:78px 0 58px;border-bottom:1px solid var(--border)}.crumb{margin-bottom:20px;color:var(--dim);font:13px Consolas,monospace}
+.crumb a{color:#a9b4c0;text-decoration:none}.eyebrow{margin-bottom:14px;color:var(--accent);font:600 13px Consolas,monospace;letter-spacing:.9px;text-transform:uppercase}
+h1{max-width:920px;margin:0 0 22px;font-size:clamp(38px,6vw,64px);line-height:1.08;letter-spacing:-1.9px}
+.lead{max-width:830px;margin:0 0 26px;color:var(--article);font-size:20px}
+.tags{display:flex;flex-wrap:wrap;gap:8px}.tags span{padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--soft);color:#a9b4c0;font:12px Consolas,monospace}
+.layout{display:grid;grid-template-columns:220px minmax(0,var(--aw));justify-content:center;gap:56px;padding:58px 0 90px}
+.toc{position:sticky;top:24px;align-self:start}.toc strong{display:block;margin-bottom:10px;font:700 12px Consolas,monospace;text-transform:uppercase;letter-spacing:.8px}
+.toc a{display:block;padding:5px 0;color:var(--dim);text-decoration:none;font-size:13px}.toc a:hover{color:var(--accent)}
+article{min-width:0}article section{margin-bottom:62px;scroll-margin-top:28px}
+article h2{margin:0 0 18px;font-size:30px;line-height:1.25}
+article p{margin:0 0 18px;color:var(--article)}article strong{color:var(--text)}
+article code:not(pre code){padding:2px 6px;border:1px solid var(--border);border-radius:5px;background:var(--soft);color:#b9d8ff;font:.92em Consolas,monospace}
+.callout{margin:26px 0;padding:20px 22px;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--soft)}
+.callout strong{display:block;margin-bottom:7px}.callout p:last-child{margin-bottom:0}
+.flow{margin:26px 0;padding:22px;border:1px solid var(--border);border-radius:9px;background:#0b1016;color:#79c0ff;font:14px/1.9 Consolas,monospace;white-space:pre-wrap}
+.codebox{margin:24px 0 28px;border:1px solid #496783;border-top:2px solid #58a6ff;border-radius:9px;overflow:hidden;background:var(--codebg);box-shadow:0 12px 30px rgba(0,0,0,.34),0 0 0 1px rgba(88,166,255,.07)}
+.codehead{display:flex;justify-content:space-between;gap:18px;padding:10px 14px;border-bottom:1px solid #496783;background:#1b2938;color:#c1dbf5;font:12px Consolas,monospace}
+pre{margin:0;padding:18px;overflow-x:auto;background:linear-gradient(180deg,rgba(88,166,255,.055),rgba(88,166,255,.012) 55%,transparent);color:var(--code);font:13px/1.58 Consolas,monospace;tab-size:8}
+.tok-comment{color:#6f8fab;font-style:italic}.tok-mn{color:#5eaeff;font-weight:650}.tok-invoke{color:#3f9cff;font-weight:700}.tok-reg{color:#b6ddff}.tok-dir{color:#85c4ff;font-weight:600}.tok-label{color:#9ed1ff}.tok-api{color:#75baff}.tok-const{color:#98ccff}.tok-num{color:#7dbfff}.tok-str{color:#c4e4ff}
+.lessons{padding-left:22px;color:var(--article)}.lessons li{margin:8px 0}
+.source{display:inline-block;padding:10px 14px;border:1px solid #496783;border-radius:7px;background:#152131;color:#b9d8ff;text-decoration:none;font:600 13px Consolas,monospace}
+.source:hover{border-color:var(--accent);color:#e4f2ff}.prev{margin-top:20px;color:#a9b4c0;font-size:14px}
+.next{margin-top:72px;padding-top:30px;border-top:1px solid var(--border)}.next small{display:block;color:var(--dim);font:12px Consolas,monospace;text-transform:uppercase;letter-spacing:.8px}.next div{margin-top:7px;font-size:20px;font-weight:650}
+footer{padding:34px 0 44px;border-top:1px solid var(--border);color:var(--dim);font-size:13px}.footer-inner{display:flex;justify-content:space-between;gap:20px}.motto{color:#a9b4c0;font-family:Consolas,monospace}
+@media(max-width:980px){.layout{grid-template-columns:minmax(0,var(--aw))}.toc{position:static;padding-bottom:20px;border-bottom:1px solid var(--border)}.toc nav{columns:2}}
+@media(max-width:700px){.container{width:min(calc(100% - 28px),var(--wide))}.hero{padding:56px 0 44px}.lead{font-size:18px}.layout{gap:36px;padding:38px 0 64px}.toc nav{columns:1}article h2{font-size:26px}.footer-inner{flex-direction:column}.nav .hide-small{display:none}}
+@media(max-width:480px){.brand-text{font-size:15px}.nav{display:none}pre{font-size:12px}}
+</style>
+</head>
+<body>
+<header class="site-header"><div class="container header-inner"><a class="brand" href="../"><span class="brand-mark">64</span><span class="brand-text">FASM Win64 Controls</span></a><nav class="nav"><a href="../">Tutorials</a><a class="hide-small" href="https://github.com/Joch64ASM/FASM-Win64-Controls/discussions">Discussions</a><a href="https://github.com/Joch64ASM/FASM-Win64-Controls">GitHub</a></nav></div></header>
+<main>
+<header class="hero"><div class="container"><div class="crumb"><a href="../">FASM Win64 Controls</a> &nbsp;/&nbsp; Window &nbsp;/&nbsp; Tutorial 04</div><div class="eyebrow">Tutorial 04 · Window</div><h1>Owner-Drawn Dark Button</h1><p class="lead">Window 1.4 already gave us the correct native button behavior. Now we keep that behavior and change only who paints the button. This is the key idea behind Win32 owner-draw.</p><div class="tags"><span>FASM x64</span><span>BUTTON</span><span>BS_OWNERDRAW</span><span>WM_DRAWITEM</span><span>DRAWITEMSTRUCT</span><span>ODS_SELECTED</span><span>ODS_FOCUS</span><span>Window_1.5_DARK_OWNERDRAW_BUTTON_CLICK_TO_PAINT.ASM</span></div></div></header>
+<div class="container layout">
+<aside class="toc"><strong>On this page</strong><nav>
+<a href="#idea">1. One major change</a>
+<a href="#style">2. BS_OWNERDRAW</a>
+<a href="#drawitem">3. WM_DRAWITEM</a>
+<a href="#layout64">4. Win64 structure layout</a>
+<a href="#identify">5. Identify the sender</a>
+<a href="#face">6. Paint the face</a>
+<a href="#caption">7. Caption ownership</a>
+<a href="#pressed">8. Pressed state</a>
+<a href="#focus">9. Focus cue</a>
+<a href="#dc">10. HDC ownership</a>
+<a href="#command">11. WM_COMMAND stays</a>
+<a href="#learned">12. What we learned</a>
+</nav></aside>
+<article>
+<section id="idea"><h2>1. One major change: painting responsibility</h2>
+<p>Tutorial 03 established the interaction model we want to keep: the child is a real native <code>BUTTON</code>, the parent receives <code>WM_COMMAND / BN_CLICKED</code>, application state changes, and <code>WM_PAINT</code> renders that state.</p>
+<p>Window 1.5 does <strong>not</strong> replace that model. It changes one thing: the button asks its parent to draw the button face and caption.</p>
+<div class="flow">Window 1.4
+ native BUTTON
+      │
+      ├─ USER32 owns behavior
+      ├─ focus / keyboard / mouse
+      └─ BN_CLICKED
+             │
+             ▼
+Window 1.5 adds BS_OWNERDRAW
+             │
+             ▼
+       WM_DRAWITEM
+             │
+             ▼
+ parent paints appearance</div>
+<div class="callout"><strong>The central rule</strong><p><code>BS_OWNERDRAW</code> changes painting responsibility. It does not turn the button into a custom control and it does not replace the system BUTTON window procedure.</p></div>
+</section><section id="style"><h2>2. BS_OWNERDRAW keeps the BUTTON but redirects painting</h2>
+<p>The creation call is almost identical to Tutorial 03. The important change is the button style.</p><div class="codebox"><div class="codehead"><span>main</span><span>create the owner-drawn BUTTON</span></div><pre><code>invoke CreateWindowExW, 0, ButtonClassName, _buttonPaintText,\
+       WS_CHILD + WS_VISIBLE + WS_TABSTOP + BUTTON_BS_OWNERDRAW,\
+       0, 0, 0, 0,\
+       [MainWindow], ID_BUTTON_DEMO, [wc.hInstance], 0</code></pre></div><p>The child HWND is still created from the system <code>'BUTTON'</code> class. USER32 still handles focus, Space/Enter activation, mouse capture and click generation. The source comment says it directly: the style “only redirects the visual work to our parent's <code>WM_DRAWITEM</code>.”</p></section><section id="drawitem"><h2>3. WM_DRAWITEM goes to the parent</h2>
+<p>When an owner-drawn button needs to be displayed, Windows sends <code>WM_DRAWITEM</code> to the button's parent. The message's <code>lParam</code> points at a <code>DRAWITEMSTRUCT</code> describing what Windows wants drawn and where.</p><div class="codebox"><div class="codehead"><span>WindowProc</span><span>route WM_DRAWITEM</span></div><pre><code>cmp     [wmsg], WM_DRAWITEM
+je      .wmdrawitem</code></pre></div><div class="codebox"><div class="codehead"><span>WM_DRAWITEM</span><span>lParam points at DRAWITEMSTRUCT</span></div><pre><code>.wmdrawitem:
+        mov     rbx, [lparam]</code></pre></div><p>This is different from <code>WM_PAINT</code>. We do not call <code>BeginPaint</code> for the button here. Windows already supplies the destination HDC inside the structure.</p></section><section id="layout64"><h2>4. DRAWITEMSTRUCT needs the real Win64 layout</h2>
+<p>The supplied <code>FASM.INC</code> file does not expose a <code>DRAWITEMSTRUCT</code> definition, so this source defines a uniquely named local x64 layout rather than guessing with 32-bit offsets.</p>
+<p>The pointer-sized fields are the important part. After five DWORD fields, x64 alignment inserts four bytes of padding before the first HWND. The complete structure is <code>40h</code> bytes.</p><div class="codebox"><div class="codehead"><span>.data</span><span>local Win64 structure</span></div><pre><code>struct DRAWITEMSTRUCT64_LOCAL
+  CtlType       dd ?             ; 00h
+  CtlID         dd ?             ; 04h
+  itemID        dd ?             ; 08h
+  itemAction    dd ?             ; 0Ch
+  itemState     dd ?             ; 10h
+  pad0          dd ?             ; 14h -&gt; align HWND
+  hwndItem      dq ?             ; 18h
+  hDC           dq ?             ; 20h
+  rcItemLeft    dd ?             ; 28h
+  rcItemTop     dd ?             ; 2Ch
+  rcItemRight   dd ?             ; 30h
+  rcItemBottom  dd ?             ; 34h
+  itemData      dq ?             ; 38h
+ends                              ; sizeof = 40h</code></pre></div><div class="callout"><strong>Why the padding matters</strong><p>Using a 32-bit structure layout in a 64-bit process would make fields after <code>itemState</code> land at the wrong offsets. The HDC, RECT and state information would then be read from the wrong bytes.</p></div></section><section id="identify"><h2>5. Identify exactly which control is asking to be drawn</h2>
+<p>A parent may eventually own several owner-drawn controls. The handler therefore checks more than one field before drawing.</p><div class="codebox"><div class="codehead"><span>WM_DRAWITEM</span><span>validate the sender</span></div><pre><code>cmp     dword [rbx + DRAWITEMSTRUCT64_LOCAL.CtlType], BUTTON_ODT_BUTTON
+jne     .default
+
+cmp     dword [rbx + DRAWITEMSTRUCT64_LOCAL.CtlID], ID_BUTTON_DEMO
+jne     .default
+
+mov     rax, [rbx + DRAWITEMSTRUCT64_LOCAL.hwndItem]
+cmp     rax, [hButton]
+jne     .default</code></pre></div><p>The source checks the control type, the control ID and the exact child HWND. That is deliberately strict and makes the routine safe to extend later.</p></section><section id="face"><h2>6. Paint the face from native button state</h2>
+<p>The button itself tells us whether it is currently selected/pressed through <code>itemState</code>. We do not maintain a duplicate mouse-down flag in our application.</p><div class="codebox"><div class="codehead"><span>WM_DRAWITEM</span><span>normal versus pressed face</span></div><pre><code>mov     eax, [rbx + DRAWITEMSTRUCT64_LOCAL.itemState]
+test    eax, BUTTON_ODS_SELECTED
+jnz     .button_pressed
+
+invoke CreateSolidBrush, BUTTON_COLOR_NORMAL
+jmp     .have_button_fill
+
+.button_pressed:
+invoke CreateSolidBrush, BUTTON_COLOR_PRESSED</code></pre></div><div class="codebox"><div class="codehead"><span>WM_DRAWITEM</span><span>fill and frame</span></div><pre><code>invoke FillRect, [rbx + DRAWITEMSTRUCT64_LOCAL.hDC], buttonRect, rsi
+
+invoke CreateSolidBrush, BUTTON_COLOR_BORDER
+invoke FrameRect, [rbx + DRAWITEMSTRUCT64_LOCAL.hDC], buttonRect, rsi</code></pre></div><p>The normal face is <code>#242424</code>, close to the parent background, while the pressed face becomes a little lighter. A restrained border keeps the control visible without looking like a bright classic button.</p></section><section id="caption"><h2>7. Owner-draw does not change caption ownership</h2>
+<p>Windows no longer draws the caption for us, but the caption still belongs to the child HWND. That distinction is useful because Tutorial 03 already changes the caption between <strong>Paint Text</strong> and <strong>Clear Text</strong> with <code>SetWindowTextW</code>.</p>
+<p>The drawing routine therefore asks the child for its current text instead of hard-coding a separate copy.</p><div class="codebox"><div class="codehead"><span>WM_DRAWITEM</span><span>read the current BUTTON caption</span></div><pre><code>invoke GetWindowTextW, [hButton], ButtonTextBuffer, BUTTON_TEXT_CAPACITY
+
+invoke SelectObject, [rbx + DRAWITEMSTRUCT64_LOCAL.hDC], [hButtonFont]
+mov     rdi, rax
+
+invoke SetBkMode, [rbx + DRAWITEMSTRUCT64_LOCAL.hDC], TRANSPARENT
+
+invoke DrawTextW, [rbx + DRAWITEMSTRUCT64_LOCAL.hDC], ButtonTextBuffer, -1,\
+       buttonTextRect, DT_CENTER + DT_VCENTER + DT_SINGLELINE</code></pre></div><p>This gives us one source of truth: the native child window owns the caption, and the owner-draw code merely renders whatever caption the child currently contains.</p></section><section id="pressed"><h2>8. ODS_SELECTED gives us real pressed feedback</h2>
+<p>The source uses the same native <code>ODS_SELECTED</code> bit for both the button face and the caption treatment.</p><div class="codebox"><div class="codehead"><span>WM_DRAWITEM</span><span>pressed caption color</span></div><pre><code>mov     eax, [rbx + DRAWITEMSTRUCT64_LOCAL.itemState]
+test    eax, BUTTON_ODS_SELECTED
+jnz     .button_text_pressed
+
+invoke SetTextColor, [rbx + DRAWITEMSTRUCT64_LOCAL.hDC],\
+       BUTTON_COLOR_TEXT_NORMAL
+jmp     .draw_button_text
+
+.button_text_pressed:
+invoke SetTextColor, [rbx + DRAWITEMSTRUCT64_LOCAL.hDC],\
+       BUTTON_COLOR_TEXT_PRESSED</code></pre></div><div class="codebox"><div class="codehead"><span>WM_DRAWITEM</span><span>one-DPI-pixel pressed offset</span></div><pre><code>invoke MulDiv, BUTTON_PRESSED_OFFSET_96, [CurrentDpi], 96
+test    eax, eax
+jnz     .pressed_offset_ready
+mov     eax, 1
+
+.pressed_offset_ready:
+add     [buttonTextRect.left], eax
+add     [buttonTextRect.top], eax
+add     [buttonTextRect.right], eax
+add     [buttonTextRect.bottom], eax</code></pre></div><p>The pressed caption uses the same blue as our tutorial/site accent: RGB <strong>#58A6FF</strong>. The one-pixel shift is calculated from the 96-DPI design value so it remains visually consistent at higher DPI.</p>
+<div class="callout"><strong>No duplicate pressed flag</strong><p>Because <code>ODS_SELECTED</code> comes from the native BUTTON, this feedback follows native mouse capture and keyboard activation automatically.</p></div></section><section id="focus"><h2>9. Keyboard focus still belongs to the native control</h2>
+<p>An owner-drawn control should not silently remove keyboard feedback. The native button exposes focus through <code>ODS_FOCUS</code>, and the source draws an inset focus rectangle when that bit is present.</p><div class="codebox"><div class="codehead"><span>WM_DRAWITEM</span><span>focus cue</span></div><pre><code>mov     eax, [rbx + DRAWITEMSTRUCT64_LOCAL.itemState]
+test    eax, BUTTON_ODS_FOCUS
+jz      .button_draw_done
+
+invoke InflateRect, buttonFocusRect, [FocusInsetNeg], [FocusInsetNeg]
+invoke DrawFocusRect, [rbx + DRAWITEMSTRUCT64_LOCAL.hDC], buttonFocusRect</code></pre></div><p>This is another good example of owner-draw preserving behavior: Windows tracks focus, and our code decides how that state is represented visually.</p></section><section id="dc"><h2>10. The WM_DRAWITEM HDC is borrowed</h2>
+<p>The HDC in <code>DRAWITEMSTRUCT</code> is supplied by Windows. The routine may select the application-owned button font into it temporarily, but it should restore the previous object before returning.</p><div class="codebox"><div class="codehead"><span>WM_DRAWITEM</span><span>restore the supplied DC</span></div><pre><code>invoke SelectObject, [rbx + DRAWITEMSTRUCT64_LOCAL.hDC], [hButtonFont]
+mov     rdi, rax
+
+; ... draw caption ...
+
+invoke SelectObject, [rbx + DRAWITEMSTRUCT64_LOCAL.hDC], rdi</code></pre></div><p>The temporary brushes created for the face and border are also deleted after use. The same ownership discipline from the earlier GDI lessons still applies.</p></section><section id="command"><h2>11. WM_COMMAND and BN_CLICKED stay the same</h2>
+<p>This is the most important proof that owner-draw did not replace the control's behavior. The click handler from Tutorial 03 is still the mechanism that toggles <code>TextVisible</code> and updates the button caption.</p><div class="codebox"><div class="codehead"><span>WM_COMMAND</span><span>behavior remains native</span></div><pre><code>and     eax, 0FFFFh
+cmp     eax, ID_BUTTON_DEMO
+jne     .default
+
+shr     ecx, 16
+cmp     ecx, BUTTON_BN_CLICKED
+jne     .default
+
+xor     dword [TextVisible], 1</code></pre></div><div class="codebox"><div class="codehead"><span>WM_COMMAND</span><span>request parent and child repaint</span></div><pre><code>invoke InvalidateRect, [hwnd], NULL, FALSE
+invoke InvalidateRect, [hButton], NULL, FALSE</code></pre></div><p>The parent invalidation updates the conditional <code>DrawTextW</code> text. The child invalidation requests a fresh owner-draw pass for the button. These are separate windows with separate update regions.</p>
+<div class="flow">native BUTTON behavior
+      │
+      ├─ BN_CLICKED ──► WM_COMMAND ──► application state
+      │
+      └─ visual state ─► WM_DRAWITEM ─► custom appearance</div>
+</section><section id="learned"><h2>12. What we learned</h2>
+<p>Owner-draw becomes much easier to reason about once behavior and appearance are kept separate.</p>
+<ul class="lessons">
+<li><code>BS_OWNERDRAW</code> keeps the native BUTTON class and redirects its painting.</li>
+<li><code>WM_DRAWITEM</code> is sent to the parent, not the child.</li>
+<li><code>lParam</code> points at a <code>DRAWITEMSTRUCT</code>.</li>
+<li>The x64 structure needs pointer alignment and is <code>40h</code> bytes in this source.</li>
+<li>The handler can validate <code>CtlType</code>, <code>CtlID</code> and <code>hwndItem</code>.</li>
+<li><code>ODS_SELECTED</code> supplies the real native pressed state.</li>
+<li><code>ODS_FOCUS</code> supplies native keyboard-focus state.</li>
+<li>The child HWND still owns its caption; <code>GetWindowTextW</code> retrieves it for drawing.</li>
+<li>The HDC supplied through <code>WM_DRAWITEM</code> is borrowed and should have its previous GDI objects restored.</li>
+<li>Temporary brushes created by the application must be deleted.</li>
+<li><code>WM_COMMAND / BN_CLICKED</code> remains the interaction path from Tutorial 03.</li>
+<li>Owner-draw changes appearance without replacing native control behavior.</li>
+</ul>
+<a class="source" href="https://github.com/Joch64ASM/FASM-Win64-Controls/blob/main/Window/Window_1.5_DARK_OWNERDRAW_BUTTON_CLICK_TO_PAINT.ASM">View complete Window 1.5 source on GitHub →</a>
+<div class="prev">← <a href="03-native-button-click-to-paint.html">Tutorial 03 — Native Button: Click to Paint</a></div>
+<div class="next"><small>Next step</small><div>Carry the same native message, state and ownership model into the next Win64 control.</div></div>
+</section>
+</article></div></main>
+<footer><div class="container footer-inner"><div>FASM Win64 Controls</div><div class="motto">Pure FASM x64 · Native Win32 · No frameworks</div></div></footer>
+<script>(()=>{const m=new Set('mov movsx movzx lea push pop add sub imul mul idiv div inc dec neg not and or xor shl shr sar rol ror cmp test xchg call ret jmp je jne jz jnz jl jle jg jge jb jbe ja jae jc jnc js jns jo jno nop'.split(' ')),d=new Set('proc endp uses format entry include section library readable writeable executable data import db dw dd dq du rb rw rd rq equ macro local if else end repeat align sizeof struct ends'.split(' ')),r=new Set('rax rbx rcx rdx rsi rdi rbp rsp r8 r9 r10 r11 r12 r13 r14 r15 eax ebx ecx edx esi edi ebp esp r8d r9d r10d r11d r12d r13d r14d r15d ax bx cx dx si di bp sp al bl cl dl'.split(' ')),e=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');function h(line){let q=false,i=line.length;for(let n=0;n<line.length;n++){if(line[n]==="'")q=!q;if(line[n]===';'&&!q){i=n;break}}const b=line.slice(0,i),c=line.slice(i),p=/'[^'\n]*'|\b(?:0[0-9A-Fa-f]+h|[0-9]+)\b|[.$A-Za-z_?@][.$A-Za-z0-9_?@]*/g;let o='',z=0,x;while((x=p.exec(b))){o+=e(b.slice(z,x.index));const t=x[0],l=t.toLowerCase(),n=b[x.index+t.length]||'';let k='';if(t[0]==="'")k='tok-str';else if(/^(?:0[0-9A-Fa-f]+h|[0-9]+)$/.test(t))k='tok-num';else if(l==='invoke')k='tok-invoke';else if(m.has(l))k='tok-mn';else if(d.has(l))k='tok-dir';else if(r.has(l))k='tok-reg';else if(t[0]==='.'||n===':')k='tok-label';else if(/^[A-Z][A-Z0-9_]*$/.test(t))k='tok-const';else if(/^[A-Z][A-Za-z0-9]+$/.test(t))k='tok-api';o+=k?`<span class="${k}">${e(t)}</span>`:e(t);z=x.index+t.length}o+=e(b.slice(z));if(c)o+=`<span class="tok-comment">${e(c)}</span>`;return o}document.querySelectorAll('.codebox pre code').forEach(c=>c.innerHTML=c.textContent.split('\n').map(h).join('\n'))})();</script>
+</body></html>
