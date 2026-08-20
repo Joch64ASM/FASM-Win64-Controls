@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Create a native Win64 BUTTON in pure FASM x64, handle WM_COMMAND and BN_CLICKED, change application state, and repaint the parent with DrawTextW.">
+<meta name="theme-color" content="#0d1117">
+<title>Tutorial 03 — Native Button: Click to Paint | FASM Win64 Controls</title>
+<style>
+:root{--bg:#0d1117;--soft:#111820;--panel:#151c24;--border:#293442;--border2:#354354;--text:#e6edf3;--article:#c7d4e2;--dim:#768390;--accent:#58a6ff;--code:#d9ecff;--codebg:#101925;--wide:1180px;--aw:790px}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at top center,#162231 0,var(--bg) 420px);color:var(--text);font:16px/1.72 "Segoe UI",system-ui,sans-serif}a{color:var(--accent)}.container{width:min(calc(100% - 40px),var(--wide));margin:auto}.site-header{border-bottom:1px solid var(--border);background:rgba(13,17,23,.92)}.header-inner{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px}.brand{display:flex;align-items:center;gap:13px;color:var(--text);text-decoration:none}.brand-mark{width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--border2);border-radius:8px;background:var(--panel);color:var(--accent);font:700 17px Consolas,monospace}.brand-text{font-size:17px;font-weight:650}.nav{display:flex;gap:6px}.nav a{padding:8px 12px;border-radius:6px;color:#a9b4c0;text-decoration:none;font-size:14px}.nav a:hover{color:var(--text);background:var(--panel)}.hero{padding:78px 0 58px;border-bottom:1px solid var(--border)}.crumb{margin-bottom:20px;color:var(--dim);font:13px Consolas,monospace}.crumb a{color:#a9b4c0;text-decoration:none}.eyebrow{margin-bottom:14px;color:var(--accent);font:600 13px Consolas,monospace;letter-spacing:.9px;text-transform:uppercase}h1{max-width:920px;margin:0 0 22px;font-size:clamp(38px,6vw,64px);line-height:1.08;letter-spacing:-1.9px}.lead{max-width:830px;margin:0 0 26px;color:var(--article);font-size:20px}.tags{display:flex;flex-wrap:wrap;gap:8px}.tags span{padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--soft);color:#a9b4c0;font:12px Consolas,monospace}.layout{display:grid;grid-template-columns:220px minmax(0,var(--aw));justify-content:center;gap:56px;padding:58px 0 90px}.toc{position:sticky;top:24px;align-self:start}.toc strong{display:block;margin-bottom:10px;font:700 12px Consolas,monospace;text-transform:uppercase;letter-spacing:.8px}.toc a{display:block;padding:5px 0;color:var(--dim);text-decoration:none;font-size:13px}.toc a:hover{color:var(--accent)}article{min-width:0}article section{margin-bottom:62px;scroll-margin-top:28px}article h2{margin:0 0 18px;font-size:30px;line-height:1.25}article p{margin:0 0 18px;color:var(--article)}article strong{color:var(--text)}article code:not(pre code){padding:2px 6px;border:1px solid var(--border);border-radius:5px;background:var(--soft);color:#b9d8ff;font:.92em Consolas,monospace}.callout{margin:26px 0;padding:20px 22px;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--soft)}.callout strong{display:block;margin-bottom:7px}.callout p:last-child{margin-bottom:0}.flow{margin:26px 0;padding:22px;border:1px solid var(--border);border-radius:9px;background:#0b1016;color:#c0cedc;font:14px/1.9 Consolas,monospace;white-space:pre-wrap}.codebox{margin:24px 0 28px;border:1px solid #496783;border-top:2px solid #58a6ff;border-radius:9px;overflow:hidden;background:var(--codebg);box-shadow:0 12px 30px rgba(0,0,0,.34),0 0 0 1px rgba(88,166,255,.07)}.codehead{display:flex;justify-content:space-between;gap:18px;padding:10px 14px;border-bottom:1px solid #496783;background:#1b2938;color:#c1dbf5;font:12px Consolas,monospace}pre{margin:0;padding:18px;overflow-x:auto;background:linear-gradient(180deg,rgba(88,166,255,.055),rgba(88,166,255,.012) 55%,transparent);color:var(--code);font:13px/1.58 Consolas,monospace;tab-size:8}.tok-comment{color:#6f8fab;font-style:italic}.tok-mn{color:#5eaeff;font-weight:650}.tok-invoke{color:#3f9cff;font-weight:700}.tok-reg{color:#b6ddff}.tok-dir{color:#85c4ff;font-weight:600}.tok-label{color:#9ed1ff}.tok-api{color:#75baff}.tok-const{color:#98ccff}.tok-num{color:#7dbfff}.tok-str{color:#c4e4ff}.lessons{padding-left:22px;color:var(--article)}.lessons li{margin:8px 0}.source{display:inline-block;padding:10px 14px;border:1px solid #496783;border-radius:7px;background:#152131;color:#b9d8ff;text-decoration:none;font:600 13px Consolas,monospace}.source:hover{border-color:var(--accent);color:#e4f2ff}.prev{margin-top:20px;color:#a9b4c0;font-size:14px}.next{margin-top:72px;padding-top:30px;border-top:1px solid var(--border)}.next small{display:block;color:var(--dim);font:12px Consolas,monospace;text-transform:uppercase;letter-spacing:.8px}.next div{margin-top:7px;font-size:20px;font-weight:650}footer{padding:34px 0 44px;border-top:1px solid var(--border);color:var(--dim);font-size:13px}.footer-inner{display:flex;justify-content:space-between;gap:20px}.motto{color:#a9b4c0;font-family:Consolas,monospace}@media(max-width:980px){.layout{grid-template-columns:minmax(0,var(--aw))}.toc{position:static;padding-bottom:20px;border-bottom:1px solid var(--border)}.toc nav{columns:2}}@media(max-width:700px){.container{width:min(calc(100% - 28px),var(--wide))}.hero{padding:56px 0 44px}.lead{font-size:18px}.layout{gap:36px;padding:38px 0 64px}.toc nav{columns:1}article h2{font-size:26px}.footer-inner{flex-direction:column}.nav .hide-small{display:none}}@media(max-width:480px){.brand-text{font-size:15px}.nav{display:none}pre{font-size:12px}}
+</style>
+</head>
+<body>
+<header class="site-header"><div class="container header-inner"><a class="brand" href="../"><span class="brand-mark">64</span><span class="brand-text">FASM Win64 Controls</span></a><nav class="nav"><a href="../">Tutorials</a><a class="hide-small" href="https://github.com/Joch64ASM/FASM-Win64-Controls/discussions">Discussions</a><a href="https://github.com/Joch64ASM/FASM-Win64-Controls">GitHub</a></nav></div></header>
+<main>
+<header class="hero"><div class="container"><div class="crumb"><a href="../">FASM Win64 Controls</a> &nbsp;/&nbsp; Window &nbsp;/&nbsp; Tutorial 03</div><div class="eyebrow">Tutorial 03 · Window</div><h1>Native Button: Click to Paint</h1><p class="lead">Now we add the first real child control. The window starts clean with one normal native BUTTON. Clicking it changes application state, requests a repaint, and lets WM_PAINT decide what the parent displays.</p><div class="tags"><span>FASM x64</span><span>BUTTON</span><span>WM_COMMAND</span><span>BN_CLICKED</span><span>InvalidateRect</span><span>WM_SETFONT</span><span>DPI aware</span><span>Window_1.4_NATIVE_BUTTON_CLICK_TO_PAINT.ASM</span></div></div></header>
+<div class="container layout"><aside class="toc"><strong>On this page</strong><nav><a href="#idea">1. One new idea</a><a href="#button">2. BUTTON is a window</a><a href="#id">3. Control ID</a><a href="#command">4. WM_COMMAND</a><a href="#state">5. Change state</a><a href="#invalidate">6. Request repaint</a><a href="#paint">7. WM_PAINT renders</a><a href="#caption">8. Button caption</a><a href="#font">9. WM_SETFONT</a><a href="#layout">10. Layout &amp; DPI</a><a href="#ownership">11. Ownership</a><a href="#learned">12. What we learned</a></nav></aside><article>
+<section id="idea"><h2>1. One new idea: let the control talk to its parent</h2><p>Tutorial 02 taught us how to paint Unicode text. This lesson deliberately starts from the clean shell again so the new concept is obvious: <strong>a child control sends a notification to its parent</strong>.</p><p>Nothing is painted when the program opens. The button is the only new visible object. Only after a click does the parent decide that the text should exist.</p><div class="flow">Program starts
+     │
+     ▼
+ [ Paint Text ]
+     │
+     │ click
+     ▼
+ WM_COMMAND
+     │
+     └─ BN_CLICKED
+            │
+            ▼
+     TextVisible toggles
+            │
+            ▼
+       InvalidateRect
+            │
+            ▼
+         WM_PAINT
+            │
+            ▼
+         DrawTextW</div></section>
+<section id="button"><h2>2. A BUTTON is another window</h2><p>A native button is not a bitmap painted into the parent. It is its own child window, with its own <code>HWND</code> and a window procedure supplied by USER32.</p><div class="codebox"><div class="codehead"><span>main</span><span>CreateWindowExW — BUTTON</span></div><pre><code>invoke CreateWindowExW, 0, ButtonClassName, _buttonPaintText,\
+       WS_CHILD + WS_VISIBLE + WS_TABSTOP + BUTTON_BS_PUSHBUTTON,\
+       0, 0, 0, 0,\
+       [MainWindow], ID_BUTTON_DEMO, [wc.hInstance], 0
+
+test    rax, rax
+jz      error
+
+mov     [hButton], rax</code></pre></div><p>The class name is the system class <code>'BUTTON'</code>. We do not register that class ourselves; Windows already owns it. We create an instance as a child of <code>MainWindow</code>.</p><div class="callout"><strong>Why no owner-draw yet?</strong><p>This is intentionally a normal Windows button. USER32 still handles its standard behavior and painting. We first learn the control's message contract; custom appearance comes in the next lesson.</p></div></section>
+<section id="id"><h2>3. The control ID gives the parent a stable identity</h2><p>The child has an HWND, but command notifications also carry a small control ID. This example assigns <code>ID_BUTTON_DEMO</code> when the button is created.</p><div class="codebox"><div class="codehead"><span>constants</span><span>button identity</span></div><pre><code>ID_BUTTON_DEMO       equ 1001
+BUTTON_BN_CLICKED    equ 0</code></pre></div><p>The parent can therefore distinguish this button from other controls that may later send <code>WM_COMMAND</code>.</p></section>
+<section id="command"><h2>4. BN_CLICKED arrives inside WM_COMMAND</h2><p>When the native button is activated, Windows sends <code>WM_COMMAND</code> to the parent. For a control notification, the low word of <code>wParam</code> contains the control ID and the high word contains the notification code.</p><div class="codebox"><div class="codehead"><span>WindowProc</span><span>decode WM_COMMAND</span></div><pre><code>.wmcommand:
+        mov     eax, dword [wparam]
+        mov     ecx, eax
+
+        ; LOWORD(wParam) = control ID
+        and     eax, 0FFFFh
+        cmp     eax, ID_BUTTON_DEMO
+        jne     .default
+
+        ; HIWORD(wParam) = notification code
+        shr     ecx, 16
+        cmp     ecx, BUTTON_BN_CLICKED
+        jne     .default</code></pre></div><p>The original <code>lParam</code> also identifies the sending child HWND. The ID is enough for this one-button lesson, so the handler stays focused.</p></section>
+<section id="state"><h2>5. The click changes state — it does not paint</h2><p>The button click flips one application-owned value:</p><div class="codebox"><div class="codehead"><span>WM_COMMAND</span><span>toggle state</span></div><pre><code>; 0 = hidden, 1 = visible
+xor     dword [TextVisible], 1</code></pre></div><p>This separation is important. <code>WM_COMMAND</code> describes an event. Our handler updates the program's state in response to that event; it does not borrow a DC and draw text immediately.</p></section>
+<section id="invalidate"><h2>6. InvalidateRect requests a repaint</h2><p>After the state changes, the parent client area no longer represents the current state. We mark it dirty:</p><div class="codebox"><div class="codehead"><span>WM_COMMAND</span><span>request paint</span></div><pre><code>invoke InvalidateRect, [hwnd], NULL, FALSE</code></pre></div><p><code>InvalidateRect</code> is not a call to <code>PaintWindow</code>. It adds the requested region to the window's update region. Windows later delivers <code>WM_PAINT</code> through the normal message system.</p><div class="callout"><strong>Event handling versus rendering</strong><p><code>WM_COMMAND</code> changes what the program means. <code>WM_PAINT</code> draws what that state currently looks like.</p></div></section>
+<section id="paint"><h2>7. WM_PAINT renders the current state</h2><p>The painting code simply asks whether <code>TextVisible</code> is zero. If it is, the text section is skipped. If it is nonzero, the DrawTextW work from Tutorial 02 is used.</p><div class="codebox"><div class="codehead"><span>PaintWindow</span><span>conditional rendering</span></div><pre><code>cmp     dword [TextVisible], 0
+je      .skip_painted_text
+
+invoke GetClientRect, [hwnd], textRect
+
+mov     eax, [ScaledTitleHeight]
+mov     [textRect.top], eax
+
+mov     eax, [ButtonY]
+sub     eax, [ScaledTextButtonGap]
+mov     [textRect.bottom], eax
+
+invoke SelectObject, [hdc], [hTextFont]
+mov     rdi, rax
+
+invoke SetBkMode, [hdc], TRANSPARENT
+invoke SetTextColor, [hdc], PAINT_TEXT_COLOR
+invoke DrawTextW, [hdc], _paintText, -1, textRect,\
+       DT_CENTER + DT_VCENTER + DT_SINGLELINE
+
+invoke SelectObject, [hdc], rdi
+
+.skip_painted_text:</code></pre></div><p>When the text is switched off, repainting the dark background removes the old pixels naturally. We do not need a special “erase this string” operation.</p></section>
+<section id="caption"><h2>8. The native button owns its caption</h2><p>The parent-painted text and the button caption are two different things. The button is a real HWND, so its own text is changed with the normal Unicode window API.</p><div class="codebox"><div class="codehead"><span>WM_COMMAND</span><span>toggle caption</span></div><pre><code>cmp     dword [TextVisible], 0
+je      .hide_text
+
+invoke SetWindowTextW, [hButton], _buttonClearText
+jmp     .request_repaint
+
+.hide_text:
+invoke SetWindowTextW, [hButton], _buttonPaintText</code></pre></div><p>That gives the interaction a useful visible state: <strong>Paint Text</strong> becomes <strong>Clear Text</strong>, and vice versa.</p></section>
+<section id="font"><h2>9. A real child control receives WM_SETFONT</h2><p>This is a useful contrast with Tutorial 02. Painted text has no HWND, so its <code>HFONT</code> is selected into an HDC. A button is a window, so we tell the control which font handle to use with <code>WM_SETFONT</code>.</p><div class="codebox"><div class="codehead"><span>UpdateButtonFont</span><span>native control font</span></div><pre><code>mov     [hButtonFont], rsi
+invoke SendMessageW, [hButton], WM_SETFONT, rsi, TRUE</code></pre></div><p>The final <code>TRUE</code> asks the control to redraw after the font changes. USER32 stores the font handle, but it does not take ownership of our GDI object.</p></section>
+<section id="layout"><h2>10. Child windows need layout — and DPI affects layout</h2><p>A child HWND does not automatically remain centered when its parent resizes. <code>WM_SIZE</code> therefore calls <code>LayoutButton</code>.</p><div class="codebox"><div class="codehead"><span>WM_SIZE</span><span>layout policy</span></div><pre><code>.wmsize:
+        call    LayoutButton
+        invoke InvalidateRect, [hwnd], NULL, FALSE</code></pre></div><p>The button dimensions and offset are recalculated from fixed 96-DPI design values. On <code>WM_DPICHANGED</code> the shell measurements and both fonts are rebuilt for the new monitor, while the recommended window rectangle from Windows is still honored.</p></section>
+<section id="ownership"><h2>11. The parent owns both HFONT objects</h2><p>Window 1.4 now creates two fonts: one for parent-painted text and one for the child button. Both were created by this application, so both remain our responsibility.</p><div class="codebox"><div class="codehead"><span>WM_DESTROY</span><span>font cleanup</span></div><pre><code>cmp     [hTextFont], 0
+je      .no_text_font
+invoke DeleteObject, [hTextFont]
+mov     [hTextFont], 0
+
+.no_text_font:
+cmp     [hButtonFont], 0
+je      .no_button_font
+invoke DeleteObject, [hButtonFont]
+mov     [hButtonFont], 0</code></pre></div><p>Sending an HFONT to a control does not transfer ownership. That distinction becomes increasingly important as more controls and custom drawing are added.</p></section>
+<section id="learned"><h2>12. What we learned</h2><p>The first child control gives us the core Win32 control-notification pattern without hiding it behind a framework.</p><ul class="lessons"><li>A native <code>BUTTON</code> is a real child window with its own HWND.</li><li>The system <code>BUTTON</code> class is already registered by Windows.</li><li>Buttons notify their parent with <code>WM_COMMAND</code>.</li><li><code>LOWORD(wParam)</code> identifies the control and <code>HIWORD(wParam)</code> carries <code>BN_CLICKED</code>.</li><li>The click handler changes application state rather than painting directly.</li><li><code>InvalidateRect</code> marks an update region and causes painting later.</li><li><code>WM_PAINT</code> renders the current state.</li><li>A child HWND owns its caption, so <code>SetWindowTextW</code> changes the button text.</li><li>A real control receives its font through <code>WM_SETFONT</code>.</li><li>The application still owns an <code>HFONT</code> it created, even after sending it to a control.</li><li>Child HWND layout must be updated when the parent size or DPI changes.</li></ul><a class="source" href="https://github.com/Joch64ASM/FASM-Win64-Controls/blob/main/Window/Window_1.4_NATIVE_BUTTON_CLICK_TO_PAINT.ASM">View complete Window 1.4 source on GitHub →</a><div class="prev">← <a href="02-painting-text.html">Tutorial 02 — Painting Text with DrawTextW</a></div><div class="next"><small>Next step</small><div>Keep the same button behavior, but take over its appearance with owner-draw.</div></div></section>
+</article></div></main>
+<footer><div class="container footer-inner"><div>FASM Win64 Controls</div><div class="motto">Pure FASM x64 · Native Win32 · No frameworks</div></div></footer>
+<script>(()=>{const m=new Set('mov movsx movzx lea push pop add sub imul mul idiv div inc dec neg not and or xor shl shr sar rol ror cmp test xchg call ret jmp je jne jz jnz jl jle jg jge jb jbe ja jae jc jnc js jns jo jno nop'.split(' ')),d=new Set('proc endp uses format entry include section library readable writeable executable data import db dw dd dq du rb rw rd rq equ macro local if else end repeat align sizeof'.split(' ')),r=new Set('rax rbx rcx rdx rsi rdi rbp rsp r8 r9 r10 r11 r12 r13 r14 r15 eax ebx ecx edx esi edi ebp esp r8d r9d r10d r11d r12d r13d r14d r15d ax bx cx dx si di bp sp al bl cl dl'.split(' ')),e=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');function h(line){let q=false,i=line.length;for(let n=0;n<line.length;n++){if(line[n]==="'")q=!q;if(line[n]===';'&&!q){i=n;break}}const b=line.slice(0,i),c=line.slice(i),p=/'[^'\n]*'|\b(?:0[0-9A-Fa-f]+h|[0-9]+)\b|[.$A-Za-z_?@][.$A-Za-z0-9_?@]*/g;let o='',z=0,x;while((x=p.exec(b))){o+=e(b.slice(z,x.index));const t=x[0],l=t.toLowerCase(),n=b[x.index+t.length]||'';let k='';if(t[0]==="'")k='tok-str';else if(/^(?:0[0-9A-Fa-f]+h|[0-9]+)$/.test(t))k='tok-num';else if(l==='invoke')k='tok-invoke';else if(m.has(l))k='tok-mn';else if(d.has(l))k='tok-dir';else if(r.has(l))k='tok-reg';else if(t[0]==='.'||n===':')k='tok-label';else if(/^[A-Z][A-Z0-9_]*$/.test(t))k='tok-const';else if(/^[A-Z][A-Za-z0-9]+$/.test(t))k='tok-api';o+=k?`<span class="${k}">${e(t)}</span>`:e(t);z=x.index+t.length}o+=e(b.slice(z));if(c)o+=`<span class="tok-comment">${e(c)}</span>`;return o}document.querySelectorAll('.codebox pre code').forEach(c=>c.innerHTML=c.textContent.split('\n').map(h).join('\n'))})();</script>
+</body></html>
