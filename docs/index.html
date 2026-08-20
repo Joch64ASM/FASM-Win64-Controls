@@ -297,10 +297,10 @@ section{padding:82px 0}
 <section id="tutorials" class="section-border">
     <div class="container">
         <p class="section-kicker">Tutorials</p>
-        <h2 class="section-title">Build Windows controls one layer at a time.</h2>
+        <h2 class="section-title">Build native Windows programming one layer at a time.</h2>
         <p class="section-description">
-            Each subject grows from a small working example into
-            something practical while keeping the native Windows behaviour visible.
+            Start with the window itself, then add painting, controls and custom drawing as separate visible steps.
+            Source-only control examples remain listed alongside the published tutorials.
         </p>
         <div class="tutorial-list">
             <a class="tutorial-card" href="window/01-base-window-shell.html">
@@ -308,13 +308,43 @@ section{padding:82px 0}
                 <div>
                     <span class="tutorial-type">Window</span>
                     <h3 class="tutorial-title">Creating a Native Win64 Window</h3>
-                    <p class="tutorial-description">Window classes, WndProc, message loops, painting, resizing and native child controls.</p>
+                    <p class="tutorial-description">Window class, WndProc, message loop, dark shell, native resizing and DPI-aware layout.</p>
+                </div>
+                <div class="tutorial-state available">read tutorial →</div>
+            </a>
+
+            <a class="tutorial-card" href="window/02-painting-text.html">
+                <div class="tutorial-index">02</div>
+                <div>
+                    <span class="tutorial-type">Window · GDI</span>
+                    <h3 class="tutorial-title">Painting Text with DrawTextW</h3>
+                    <p class="tutorial-description">Unicode text, application-owned HFONT objects, COLORREF, GDI state and DPI-scaled painting.</p>
+                </div>
+                <div class="tutorial-state available">read tutorial →</div>
+            </a>
+
+            <a class="tutorial-card" href="window/03-native-button-click-to-paint.html">
+                <div class="tutorial-index">03</div>
+                <div>
+                    <span class="tutorial-type">Button</span>
+                    <h3 class="tutorial-title">Native Button: Click to Paint</h3>
+                    <p class="tutorial-description">Create a real BUTTON HWND, receive WM_COMMAND / BN_CLICKED, change state and repaint the parent.</p>
+                </div>
+                <div class="tutorial-state available">read tutorial →</div>
+            </a>
+
+            <a class="tutorial-card" href="window/04-ownerdrawn-dark-button.html">
+                <div class="tutorial-index">04</div>
+                <div>
+                    <span class="tutorial-type">Button · Owner Draw</span>
+                    <h3 class="tutorial-title">Owner-Drawn Dark Button</h3>
+                    <p class="tutorial-description">Keep native button behavior while taking over appearance with BS_OWNERDRAW, WM_DRAWITEM and DRAWITEMSTRUCT.</p>
                 </div>
                 <div class="tutorial-state available">read tutorial →</div>
             </a>
 
             <a class="tutorial-card" href="https://github.com/Joch64ASM/FASM-Win64-Controls/tree/main/ListBox">
-                <div class="tutorial-index">02</div>
+                <div class="tutorial-index">05</div>
                 <div>
                     <span class="tutorial-type">ListBox</span>
                     <h3 class="tutorial-title">Owner-Drawn File &amp; PE Report</h3>
@@ -324,7 +354,7 @@ section{padding:82px 0}
             </a>
 
             <a class="tutorial-card" href="https://github.com/Joch64ASM/FASM-Win64-Controls/tree/main/TabControl">
-                <div class="tutorial-index">03</div>
+                <div class="tutorial-index">06</div>
                 <div>
                     <span class="tutorial-type">TabControl</span>
                     <h3 class="tutorial-title">Native Pages &amp; Integrated Controls</h3>
