@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Build a dark native Win64 ListBox in pure FASM x64, add Unicode items, receive LBN_SELCHANGE, query LB_GETCURSEL and LB_GETTEXT, and preserve native selection ownership.">
+<meta name="theme-color" content="#0d1117">
+<title>Tutorial 05 — Dark ListBox: Items &amp; Selection | FASM Win64 Controls</title>
+<style>
+:root{--bg:#0d1117;--soft:#111820;--panel:#151c24;--border:#293442;--border2:#354354;--text:#e6edf3;--article:#c7d4e2;--dim:#768390;--accent:#58a6ff;--code:#d9ecff;--codebg:#101925;--wide:1180px;--aw:790px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(circle at top center,#162231 0,var(--bg) 420px);color:var(--text);font:16px/1.72 "Segoe UI",system-ui,sans-serif}
+a{color:var(--accent)}.container{width:min(calc(100% - 40px),var(--wide));margin:auto}
+.site-header{border-bottom:1px solid var(--border);background:rgba(13,17,23,.92)}
+.header-inner{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:flex;align-items:center;gap:13px;color:var(--text);text-decoration:none}
+.brand-mark{width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--border2);border-radius:8px;background:var(--panel);color:var(--accent);font:700 17px Consolas,monospace}
+.brand-text{font-size:17px;font-weight:650}.nav{display:flex;gap:6px}
+.nav a{padding:8px 12px;border-radius:6px;color:#a9b4c0;text-decoration:none;font-size:14px}.nav a:hover{color:var(--text);background:var(--panel)}
+.hero{padding:78px 0 58px;border-bottom:1px solid var(--border)}.crumb{margin-bottom:20px;color:var(--dim);font:13px Consolas,monospace}
+.crumb a{color:#a9b4c0;text-decoration:none}.eyebrow{margin-bottom:14px;color:var(--accent);font:600 13px Consolas,monospace;letter-spacing:.9px;text-transform:uppercase}
+h1{max-width:920px;margin:0 0 22px;font-size:clamp(38px,6vw,64px);line-height:1.08;letter-spacing:-1.9px}
+.lead{max-width:830px;margin:0 0 26px;color:var(--article);font-size:20px}
+.tags{display:flex;flex-wrap:wrap;gap:8px}.tags span{padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--soft);color:#a9b4c0;font:12px Consolas,monospace}
+.layout{display:grid;grid-template-columns:220px minmax(0,var(--aw));justify-content:center;gap:56px;padding:58px 0 90px}
+.toc{position:sticky;top:24px;align-self:start}.toc strong{display:block;margin-bottom:10px;font:700 12px Consolas,monospace;text-transform:uppercase;letter-spacing:.8px}
+.toc a{display:block;padding:5px 0;color:var(--dim);text-decoration:none;font-size:13px}.toc a:hover{color:var(--accent)}
+article{min-width:0}article section{margin-bottom:62px;scroll-margin-top:28px}
+article h2{margin:0 0 18px;font-size:30px;line-height:1.25}
+article p{margin:0 0 18px;color:var(--article)}article strong{color:var(--text)}
+article code:not(pre code){padding:2px 6px;border:1px solid var(--border);border-radius:5px;background:var(--soft);color:#b9d8ff;font:.92em Consolas,monospace}
+.callout{margin:26px 0;padding:20px 22px;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--soft)}
+.callout strong{display:block;margin-bottom:7px}.callout p:last-child{margin-bottom:0}
+.flow{margin:26px 0;padding:22px;border:1px solid var(--border);border-radius:9px;background:#0b1016;color:#79c0ff;font:14px/1.9 Consolas,monospace;white-space:pre-wrap}
+.codebox{margin:24px 0 28px;border:1px solid #496783;border-top:2px solid #58a6ff;border-radius:9px;overflow:hidden;background:var(--codebg);box-shadow:0 12px 30px rgba(0,0,0,.34),0 0 0 1px rgba(88,166,255,.07)}
+.codehead{display:flex;justify-content:space-between;gap:18px;padding:10px 14px;border-bottom:1px solid #496783;background:#1b2938;color:#c1dbf5;font:12px Consolas,monospace}
+pre{margin:0;padding:18px;overflow-x:auto;background:linear-gradient(180deg,rgba(88,166,255,.055),rgba(88,166,255,.012) 55%,transparent);color:var(--code);font:13px/1.58 Consolas,monospace;tab-size:8}
+.tok-comment{color:#6f8fab;font-style:italic}.tok-mn{color:#5eaeff;font-weight:650}.tok-invoke{color:#3f9cff;font-weight:700}.tok-reg{color:#b6ddff}.tok-dir{color:#85c4ff;font-weight:600}.tok-label{color:#9ed1ff}.tok-api{color:#75baff}.tok-const{color:#98ccff}.tok-num{color:#7dbfff}.tok-str{color:#c4e4ff}
+.lessons{padding-left:22px;color:var(--article)}.lessons li{margin:8px 0}
+.source{display:inline-block;padding:10px 14px;border:1px solid #496783;border-radius:7px;background:#152131;color:#b9d8ff;text-decoration:none;font:600 13px Consolas,monospace}
+.source:hover{border-color:var(--accent);color:#e4f2ff}.prev{margin-top:20px;color:#a9b4c0;font-size:14px}
+.next{margin-top:72px;padding-top:30px;border-top:1px solid var(--border)}.next small{display:block;color:var(--dim);font:12px Consolas,monospace;text-transform:uppercase;letter-spacing:.8px}.next div{margin-top:7px;font-size:20px;font-weight:650}
+footer{padding:34px 0 44px;border-top:1px solid var(--border);color:var(--dim);font-size:13px}.footer-inner{display:flex;justify-content:space-between;gap:20px}.motto{color:#a9b4c0;font-family:Consolas,monospace}
+@media(max-width:980px){.layout{grid-template-columns:minmax(0,var(--aw))}.toc{position:static;padding-bottom:20px;border-bottom:1px solid var(--border)}.toc nav{columns:2}}
+@media(max-width:700px){.container{width:min(calc(100% - 28px),var(--wide))}.hero{padding:56px 0 44px}.lead{font-size:18px}.layout{gap:36px;padding:38px 0 64px}.toc nav{columns:1}article h2{font-size:26px}.footer-inner{flex-direction:column}.nav .hide-small{display:none}}
+@media(max-width:480px){.brand-text{font-size:15px}.nav{display:none}pre{font-size:12px}}
+</style>
+</head>
+<body>
+<header class="site-header"><div class="container header-inner"><a class="brand" href="../"><span class="brand-mark">64</span><span class="brand-text">FASM Win64 Controls</span></a><nav class="nav"><a href="../">Tutorials</a><a class="hide-small" href="https://github.com/Joch64ASM/FASM-Win64-Controls/discussions">Discussions</a><a href="https://github.com/Joch64ASM/FASM-Win64-Controls">GitHub</a></nav></div></header>
+<main>
+<header class="hero"><div class="container"><div class="crumb"><a href="../">FASM Win64 Controls</a> &nbsp;/&nbsp; ListBox &nbsp;/&nbsp; Tutorial 05</div><div class="eyebrow">Tutorial 05 · ListBox</div><h1>Dark ListBox: Items &amp; Selection</h1><p class="lead">Owner-draw is already familiar. Now we apply that same native model to a control that owns a collection of items and a current selection, then learn how the parent queries that state after <code>LBN_SELCHANGE</code>.</p><div class="tags"><span>FASM x64</span><span>LISTBOX</span><span>LBS_OWNERDRAWFIXED</span><span>LB_ADDSTRING</span><span>LBN_SELCHANGE</span><span>LB_GETCURSEL</span><span>LB_GETTEXT</span><span>ListBox_1.0_DARK_ITEMS_SELECTION.ASM</span></div></div></header>
+<div class="container layout">
+<aside class="toc"><strong>On this page</strong><nav>
+<a href="#continuity">1. Carry owner-draw forward</a>
+<a href="#create">2. Create the ListBox</a>
+<a href="#items">3. Add items</a>
+<a href="#measure">4. Measure rows</a>
+<a href="#draw">5. Draw rows</a>
+<a href="#click">6. Click &amp; notify</a>
+<a href="#query">7. Query selection</a>
+<a href="#state">8. Mirror parent state</a>
+<a href="#repaint">9. Repaint status</a>
+<a href="#background">10. Dark remainder</a>
+<a href="#dpi">11. DPI row height</a>
+<a href="#learned">12. What we learned</a>
+</nav></aside>
+<article>
+<section id="continuity"><h2>1. Same owner-draw model, new control contract</h2><p>We are not going back to a bright stock control. Tutorial 04 already taught the owner-draw relationship: the child control keeps its native behavior while the parent handles the drawing request.</p><div class="callout"><strong>Carry the model forward</strong><p><strong>You already know why <code>WM_DRAWITEM</code> goes to the parent; now we're applying that same model to a different native control.</strong></p></div><p>The new subject is the <strong>ListBox itself</strong>: it owns a collection of items, it owns the current selection, and it tells the parent when that selection changes.</p><div class="flow">native LISTBOX
+      │
+      ├─ owns item collection
+      ├─ owns current selection
+      ├─ handles mouse / keyboard / scrolling
+      └─ asks parent to paint rows
+                 │
+                 ▼
+          LBN_SELCHANGE
+                 │
+                 ▼
+       parent queries selection</div></section>
+<section id="create"><h2>2. Create a dark native LISTBOX</h2><p>The child still comes from Windows' built-in <code>LISTBOX</code> class. The styles combine familiar owner-draw with the ListBox features this lesson needs.</p><div class="codebox"><div class="codehead"><span>main</span><span>CreateWindowExW — LISTBOX</span></div><pre><code>invoke CreateWindowExW, 0, ListBoxClassName, 0,\
+       WS_CHILD + WS_VISIBLE + WS_TABSTOP + WS_VSCROLL +\
+       LISTBOX_LBS_NOTIFY + LISTBOX_LBS_OWNERDRAWFIXED +\
+       LISTBOX_LBS_HASSTRINGS + LISTBOX_LBS_NOINTEGRALHEIGHT,\
+       0, 0, 0, 0,\
+       [MainWindow], IDC_LISTBOX, [wc.hInstance], 0</code></pre></div><p><code>LBS_OWNERDRAWFIXED</code> gives every row one fixed height. <code>LBS_HASSTRINGS</code> tells the owner-drawn ListBox that its items are real strings. <code>LBS_NOTIFY</code> asks it to notify the parent when selection changes, and <code>LBS_NOINTEGRALHEIGHT</code> lets our DPI-aware layout choose the exact control height.</p></section>
+<section id="items"><h2>3. LB_ADDSTRING adds items to control-owned storage</h2><p>A ListBox is not just a painted rectangle. It maintains an internal item collection. The parent adds the five demo strings by sending ListBox messages.</p><div class="codebox"><div class="codehead"><span>AddDemoItems</span><span>five fixed Unicode strings</span></div><pre><code>invoke SendMessageW, [hListBox], LB_ADDSTRING, 0, sItemButton
+invoke SendMessageW, [hListBox], LB_ADDSTRING, 0, sItemListBox
+invoke SendMessageW, [hListBox], LB_ADDSTRING, 0, sItemListView
+invoke SendMessageW, [hListBox], LB_ADDSTRING, 0, sItemTreeView
+invoke SendMessageW, [hListBox], LB_ADDSTRING, 0, sItemTabControl</code></pre></div><p>Because <code>LBS_HASSTRINGS</code> is active, USER32 copies each UTF-16 string into the ListBox's own item storage. The original labels in our data section are only the source of the insertion; they are not the ListBox's storage.</p><div class="flow">our UTF-16 string
+      │
+      ▼
+ LB_ADDSTRING
+      │
+      ▼
+native ListBox copies it
+      │
+      ▼
+control-owned item collection</div></section>
+<section id="measure"><h2>4. WM_MEASUREITEM is a creation-time contract</h2><p>With <code>LBS_OWNERDRAWFIXED</code>, Windows asks the parent for one common row height through <code>WM_MEASUREITEM</code>.</p><div class="codebox"><div class="codehead"><span>WM_MEASUREITEM</span><span>fixed row height</span></div><pre><code>.wmmeasureitem:
+        mov     rbx, [lparam]
+
+        cmp     dword [rbx + MEASUREITEMSTRUCT64_LOCAL.CtlType], LISTBOX_ODT_LISTBOX
+        jne     .default
+
+        cmp     dword [rbx + MEASUREITEMSTRUCT64_LOCAL.CtlID], IDC_LISTBOX
+        jne     .default
+
+        mov     eax, [ScaledListItemHeight]
+        mov     [rbx + MEASUREITEMSTRUCT64_LOCAL.itemHeight], eax</code></pre></div><p>There is an important timing detail in the source: <code>WM_MEASUREITEM</code> may arrive <strong>during <code>CreateWindowExW</code></strong>, before <code>hListBox</code> has been stored. That is why this handler identifies the request by control type and control ID instead of depending on the child HWND.</p></section>
+<section id="draw"><h2>5. WM_DRAWITEM is familiar — but itemID is new</h2><p>The row-painting mechanism deliberately reuses the Button lesson. Windows supplies an HDC, rectangle and native state. <code>ODS_SELECTED</code> decides which row appearance to use.</p><div class="codebox"><div class="codehead"><span>WM_DRAWITEM</span><span>native selection drives appearance</span></div><pre><code>mov     eax, [rbx + DRAWITEMSTRUCT64_LOCAL.itemState]
+test    eax, LISTBOX_ODS_SELECTED
+jnz     .draw_selected
+
+mov     rdi, [hListBrushNormal]
+invoke SetTextColor, [rbx + DRAWITEMSTRUCT64_LOCAL.hDC], LISTBOX_TEXT_NORMAL
+jmp     .have_row_style
+
+.draw_selected:
+mov     rdi, [hListBrushSelected]
+invoke SetTextColor, [rbx + DRAWITEMSTRUCT64_LOCAL.hDC], LISTBOX_TEXT_SELECTED</code></pre></div><p>The difference is that a ListBox contains many entries. <code>itemID</code> identifies which entry is being drawn, and the owner-draw routine asks the ListBox for that row's text.</p><div class="codebox"><div class="codehead"><span>WM_DRAWITEM</span><span>itemID → LB_GETTEXT</span></div><pre><code>mov     esi, [rbx + DRAWITEMSTRUCT64_LOCAL.itemID]
+cmp     esi, -1
+je      .draw_focus
+
+invoke SendMessageW, [rbx + DRAWITEMSTRUCT64_LOCAL.hwndItem],\
+       LB_GETTEXT, rsi, DrawItemTextBuffer</code></pre></div><p>The source does not keep a second “this row is selected” flag. The ListBox already owns that state, so painting reads the native <code>ODS_SELECTED</code> bit.</p></section>
+<section id="click"><h2>6. Click an item: LBN_SELCHANGE arrives through WM_COMMAND</h2><p>The demo begins with the instruction <strong>“Click one of the items shown in the window.”</strong> Clicking an item lets the native ListBox change its own selection first. It then notifies the parent.</p><div class="codebox"><div class="codehead"><span>WM_COMMAND</span><span>decode the ListBox notification</span></div><pre><code>.wmcommand:
+        mov     eax, dword [wparam]
+        mov     ecx, eax
+
+        and     eax, 0FFFFh
+        cmp     eax, IDC_LISTBOX
+        jne     .default
+
+        shr     ecx, 16
+        cmp     ecx, LISTBOX_LBN_SELCHANGE
+        jne     .default
+
+        mov     rax, [lparam]
+        cmp     rax, [hListBox]
+        jne     .default</code></pre></div><p>This is the same parent message family used by the Button, but the notification is different:</p><div class="flow">LOWORD(wParam) = IDC_LISTBOX
+HIWORD(wParam) = LBN_SELCHANGE
+lParam         = ListBox HWND</div></section>
+<section id="query"><h2>7. Ask the ListBox what it selected</h2><p><code>LBN_SELCHANGE</code> does not require the parent to invent or predict the selected index. The control has already changed its internal state, so the parent simply queries it.</p><div class="codebox"><div class="codehead"><span>WM_COMMAND</span><span>LB_GETCURSEL then LB_GETTEXT</span></div><pre><code>invoke SendMessageW, [hListBox], LB_GETCURSEL, 0, 0
+cmp     eax, -1
+je      .selection_unavailable
+
+mov     esi, eax
+mov     [CurrentSelection], eax
+
+invoke SendMessageW, [hListBox], LB_GETTEXT, rsi, SelectedTextBuffer</code></pre></div><p><code>LB_GETCURSEL</code> returns the current selected index. <code>LB_GETTEXT</code> then retrieves that item's string. This is a clean example of native state ownership: <strong>the control is authoritative; the application asks for the result.</strong></p></section>
+<section id="state"><h2>8. Mirror only the state the parent needs</h2><p>The parent wants to paint <code>Selected: TreeView</code> above the child, so the source mirrors the selected index and text into small application-owned values.</p><div class="codebox"><div class="codehead"><span>.data</span><span>application mirror + owned handles</span></div><pre><code>CurrentSelection     dd -1
+SelectedTextBuffer   rw LISTBOX_TEXT_CAPACITY
+DrawItemTextBuffer   rw LISTBOX_TEXT_CAPACITY
+
+MainWindow           dq 0
+hListBox             dq 0
+hUiFont              dq 0
+hListBrushNormal     dq 0
+hListBrushSelected   dq 0</code></pre></div><p>This mirror does not replace the ListBox's selection. It exists only because the parent has its own visual output to render. If the parent did not need that status line, there would be no reason to duplicate the selected text at all.</p></section>
+<section id="repaint"><h2>9. Selection changes state; WM_PAINT renders it</h2><p>The <code>LBN_SELCHANGE</code> handler does not paint the status line directly. It invalidates only the parent region above the ListBox.</p><div class="codebox"><div class="codehead"><span>WM_COMMAND</span><span>invalidate only the status area</span></div><pre><code>invoke GetClientRect, [hwnd], statusInvalidateRect
+
+mov     eax, [ScaledTitleHeight]
+mov     [statusInvalidateRect.top], eax
+
+mov     eax, [ListBoxY]
+mov     [statusInvalidateRect.bottom], eax
+
+invoke InvalidateRect, [hwnd], statusInvalidateRect, FALSE</code></pre></div><p>Then the normal parent <code>WM_PAINT</code> path renders either the beginner instruction or the mirrored selection.</p><div class="codebox"><div class="codehead"><span>PaintWindow</span><span>before a selection exists</span></div><pre><code>cmp     dword [CurrentSelection], -1
+jne     .paint_selected_status
+
+invoke SetTextColor, [hdc], STATUS_TEXT_DIM
+invoke DrawTextW, [hdc], StatusPrompt, -1, statusRect,\
+       DT_LEFT + DT_VCENTER + DT_SINGLELINE</code></pre></div><div class="codebox"><div class="codehead"><span>PaintWindow</span><span>after a selection exists</span></div><pre><code>invoke SetTextColor, [hdc], STATUS_TEXT_DIM
+invoke DrawTextW, [hdc], StatusLabel, -1, statusLabelRect,\
+       DT_LEFT + DT_VCENTER + DT_SINGLELINE
+
+invoke SetTextColor, [hdc], STATUS_TEXT_SELECTED
+invoke DrawTextW, [hdc], SelectedTextBuffer, -1, statusValueRect,\
+       DT_LEFT + DT_VCENTER + DT_SINGLELINE + DT_END_ELLIPSIS</code></pre></div><div class="flow">click item
+   │
+   ▼
+ListBox changes native selection
+   │
+   ▼
+LBN_SELCHANGE
+   │
+   ▼
+LB_GETCURSEL + LB_GETTEXT
+   │
+   ▼
+application mirror changes
+   │
+   ▼
+InvalidateRect
+   │
+   ▼
+WM_PAINT
+   │
+   ▼
+Selected: TreeView</div></section>
+<section id="background"><h2>10. Owner-drawn rows do not cover every ListBox pixel</h2><p><code>WM_DRAWITEM</code> paints item rows, but there may be unused client area below the last row. <code>WM_CTLCOLORLISTBOX</code> supplies the dark brush for those remaining pixels.</p><div class="codebox"><div class="codehead"><span>WM_CTLCOLORLISTBOX</span><span>keep the whole control dark</span></div><pre><code>.wmctlcolorlistbox:
+        mov     rax, [lparam]
+        cmp     rax, [hListBox]
+        jne     .default
+
+        invoke SetTextColor, [wparam], LISTBOX_TEXT_NORMAL
+        invoke SetBkColor, [wparam], LISTBOX_COLOR_NORMAL
+        invoke SetBkMode, [wparam], TRANSPARENT
+
+        mov     rax, [hListBrushNormal]</code></pre></div><p>This is why the control stays visually consistent even though only five items are present.</p></section>
+<section id="dpi"><h2>11. Fixed owner-draw height still has to follow DPI</h2><p>The row height is initially supplied through <code>WM_MEASUREITEM</code>. After a live per-monitor DPI change, the source recalculates its 96-DPI design values and explicitly updates the ListBox's fixed item height.</p><div class="codebox"><div class="codehead"><span>WM_DPICHANGED</span><span>refresh the fixed row height</span></div><pre><code>call    UpdateScaledValues
+call    UpdateUiFont
+
+cmp     [hListBox], 0
+je      .dpi_no_list_height
+
+invoke SendMessageW, [hListBox], LB_SETITEMHEIGHT, 0, [ScaledListItemHeight]</code></pre></div><p>The same application-owned <code>HFONT</code> is recreated for the new DPI and reused by the parent status text and the owner-drawn rows.</p></section>
+<section id="learned"><h2>12. What we learned</h2><p>The ListBox adds a new state model without abandoning anything learned from the owner-drawn Button.</p><ul class="lessons"><li>The control is a real native <code>LISTBOX</code> HWND.</li><li><code>LBS_OWNERDRAWFIXED</code> reuses the owner-draw model already learned with Button.</li><li><code>LBS_HASSTRINGS</code> makes the owner-drawn ListBox store copied strings.</li><li><code>LB_ADDSTRING</code> adds items to the control-owned collection.</li><li><code>WM_MEASUREITEM</code> can arrive while the child is being created.</li><li><code>itemID</code> identifies which ListBox entry <code>WM_DRAWITEM</code> is asking us to paint.</li><li><code>ODS_SELECTED</code> comes from the native ListBox state; we do not maintain a duplicate row-selection flag.</li><li><code>LBN_SELCHANGE</code> arrives through <code>WM_COMMAND</code>.</li><li><code>LB_GETCURSEL</code> queries the control-owned selected index.</li><li><code>LB_GETTEXT</code> retrieves the selected string.</li><li>The application mirrors selection only because the parent wants to paint its own status line.</li><li>State changes first; <code>InvalidateRect</code> requests painting afterward.</li><li><code>WM_CTLCOLORLISTBOX</code> keeps unused ListBox client pixels dark.</li><li><code>LB_SETITEMHEIGHT</code> updates the fixed row height after a DPI change.</li></ul><a class="source" href="https://github.com/Joch64ASM/FASM-Win64-Controls/blob/main/ListBox/ListBox_1.0_DARK_ITEMS_SELECTION.ASM">View complete ListBox 1.0 source on GitHub →</a><div class="prev">← <a href="../window/04-ownerdrawn-dark-button.html">Tutorial 04 — Owner-Drawn Dark Button</a></div><div class="next"><small>Next practical stage</small><div><a href="https://github.com/Joch64ASM/FASM-Win64-Controls/blob/main/ListBox/ListBox_1.7_PE_FILE_REPORT_DYNAMIC_BOX.ASM">Grow the same ListBox into the File &amp; PE Report viewer →</a></div></div></section>
+</article></div></main>
+<footer><div class="container footer-inner"><div>FASM Win64 Controls</div><div class="motto">Pure FASM x64 · Native Win32 · No frameworks</div></div></footer>
+<script>(()=>{const m=new Set('mov movsx movzx lea push pop add sub imul mul idiv div inc dec neg not and or xor shl shr sar rol ror cmp test xchg call ret jmp je jne jz jnz jl jle jg jge jb jbe ja jae jc jnc js jns jo jno nop'.split(' ')),d=new Set('proc endp uses format entry include section library readable writeable executable data import db dw dd dq du rb rw rd rq equ macro local if else end repeat align sizeof struct ends'.split(' ')),r=new Set('rax rbx rcx rdx rsi rdi rbp rsp r8 r9 r10 r11 r12 r13 r14 r15 eax ebx ecx edx esi edi ebp esp r8d r9d r10d r11d r12d r13d r14d r15d ax bx cx dx si di bp sp al bl cl dl'.split(' ')),e=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');function h(line){let q=false,i=line.length;for(let n=0;n<line.length;n++){if(line[n]==="'")q=!q;if(line[n]===';'&&!q){i=n;break}}const b=line.slice(0,i),c=line.slice(i),p=/'[^'\n]*'|\b(?:0[0-9A-Fa-f]+h|[0-9]+)\b|[.$A-Za-z_?@][.$A-Za-z0-9_?@]*/g;let o='',z=0,x;while((x=p.exec(b))){o+=e(b.slice(z,x.index));const t=x[0],l=t.toLowerCase(),n=b[x.index+t.length]||'';let k='';if(t[0]==="'")k='tok-str';else if(/^(?:0[0-9A-Fa-f]+h|[0-9]+)$/.test(t))k='tok-num';else if(l==='invoke')k='tok-invoke';else if(m.has(l))k='tok-mn';else if(d.has(l))k='tok-dir';else if(r.has(l))k='tok-reg';else if(t[0]==='.'||n===':')k='tok-label';else if(/^[A-Z][A-Z0-9_]*$/.test(t))k='tok-const';else if(/^[A-Z][A-Za-z0-9]+$/.test(t))k='tok-api';o+=k?`<span class="${k}">${e(t)}</span>`:e(t);z=x.index+t.length}o+=e(b.slice(z));if(c)o+=`<span class="tok-comment">${e(c)}</span>`;return o}document.querySelectorAll('.codebox pre code').forEach(c=>c.innerHTML=c.textContent.split('\n').map(h).join('\n'))})();</script>
+</body></html>
