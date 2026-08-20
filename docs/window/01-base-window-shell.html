@@ -11,13 +11,13 @@
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at top center,#162231 0,var(--bg) 420px);color:var(--text);font-family:"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,sans-serif;font-size:16px;line-height:1.72}a{color:var(--accent)}.container{width:min(calc(100% - 40px),var(--wide));margin:0 auto}
 .site-header{border-bottom:1px solid var(--border);background:rgba(13,17,23,.92);backdrop-filter:blur(12px)}.header-inner{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px}.brand{display:flex;align-items:center;gap:13px;color:var(--text);text-decoration:none}.brand-mark{width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--border2);border-radius:8px;background:var(--panel);color:var(--accent);font:700 17px Consolas,"Courier New",monospace}.brand-text{font-size:17px;font-weight:650}.nav{display:flex;gap:6px}.nav a{padding:8px 12px;border-radius:6px;color:var(--softtext);text-decoration:none;font-size:14px;font-weight:500}.nav a:hover{color:var(--text);background:var(--panel)}
 .hero{padding:78px 0 58px;border-bottom:1px solid var(--border)}.crumb{margin-bottom:20px;color:var(--dim);font:13px Consolas,"Courier New",monospace}.crumb a{color:var(--softtext);text-decoration:none}.eyebrow{margin-bottom:14px;color:var(--accent);font:600 13px Consolas,"Courier New",monospace;letter-spacing:.9px;text-transform:uppercase}h1{max-width:920px;margin:0 0 22px;font-size:clamp(38px,6vw,64px);line-height:1.08;letter-spacing:-1.9px}.lead{max-width:830px;margin:0 0 26px;color:var(--softtext);font-size:20px}.tags{display:flex;flex-wrap:wrap;gap:8px}.tags span{padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--soft);color:var(--softtext);font:12px Consolas,"Courier New",monospace}
-.layout{display:grid;grid-template-columns:220px minmax(0,var(--article));justify-content:center;gap:56px;padding:58px 0 90px}.toc{position:sticky;top:24px;align-self:start}.toc strong{display:block;margin-bottom:10px;font:700 12px Consolas,"Courier New",monospace;letter-spacing:.8px;text-transform:uppercase}.toc a{display:block;padding:5px 0;color:var(--dim);text-decoration:none;font-size:13px;line-height:1.45}.toc a:hover{color:var(--accent)}article{min-width:0}article section{margin-bottom:62px;scroll-margin-top:28px}article h2{margin:0 0 18px;font-size:30px;line-height:1.25;letter-spacing:-.6px}article h3{margin:32px 0 10px;font-size:20px}article p{margin:0 0 18px;color:var(--softtext)}article strong{color:var(--text)}article code:not(pre code){padding:2px 6px;border:1px solid var(--border);border-radius:5px;background:var(--soft);color:#b9d8ff;font: .92em Consolas,"Courier New",monospace}
+.layout{display:grid;grid-template-columns:220px minmax(0,var(--article));justify-content:center;gap:56px;padding:58px 0 90px}.toc{position:sticky;top:24px;align-self:start}.toc strong{display:block;margin-bottom:10px;font:700 12px Consolas,"Courier New",monospace;letter-spacing:.8px;text-transform:uppercase}.toc a{display:block;padding:5px 0;color:var(--dim);text-decoration:none;font-size:13px;line-height:1.45}.toc a:hover{color:var(--accent)}article{min-width:0}article section{margin-bottom:62px;scroll-margin-top:28px}article h2{margin:0 0 18px;font-size:30px;line-height:1.25;letter-spacing:-.6px}article h3{margin:32px 0 10px;font-size:20px}article p{margin:0 0 18px;color:#c7d4e2}article strong{color:var(--text)}article code:not(pre code){padding:2px 6px;border:1px solid var(--border);border-radius:5px;background:var(--soft);color:#b9d8ff;font:.92em Consolas,"Courier New",monospace}
 .callout{margin:26px 0;padding:20px 22px;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--soft)}.callout strong{display:block;margin-bottom:7px}.callout p:last-child{margin-bottom:0}.flow{margin:26px 0;padding:22px;border:1px solid var(--border);border-radius:9px;background:#0b1016;color:var(--softtext);font:14px/1.9 Consolas,"Courier New",monospace;white-space:pre-wrap}
 .codebox{margin:24px 0 28px;border:1px solid #496783;border-top:2px solid #58a6ff;border-radius:9px;overflow:hidden;background:var(--codebg);box-shadow:0 12px 30px rgba(0,0,0,.34),0 0 0 1px rgba(88,166,255,.07)}
 .codehead{display:flex;justify-content:space-between;gap:18px;padding:10px 14px;border-bottom:1px solid #496783;background:#1b2938;color:#c1dbf5;font:12px Consolas,"Courier New",monospace}
 pre{margin:0;padding:18px;overflow-x:auto;background:linear-gradient(180deg,rgba(88,166,255,.055),rgba(88,166,255,.012) 55%,rgba(88,166,255,0));color:var(--code);font:13px/1.58 Consolas,"Courier New",monospace;tab-size:8}
 .tok-comment{color:#6f8fab;font-style:italic}.tok-mn{color:#5eaeff;font-weight:650}.tok-invoke{color:#3f9cff;font-weight:700}.tok-reg{color:#b6ddff}.tok-dir{color:#85c4ff;font-weight:600}.tok-label{color:#9ed1ff}.tok-api{color:#75baff}.tok-const{color:#98ccff}.tok-num{color:#7dbfff}.tok-str{color:#c4e4ff}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:26px 0}.card{padding:18px;border:1px solid var(--border);border-radius:8px;background:var(--soft)}.card strong{display:block;margin-bottom:5px;font:600 13px Consolas,"Courier New",monospace}.card p{margin:0;font-size:14px}.lessons{padding-left:22px;color:var(--softtext)}.lessons li{margin:8px 0}.next{margin-top:72px;padding-top:30px;border-top:1px solid var(--border)}.next small{color:var(--dim);font:12px Consolas,"Courier New",monospace;text-transform:uppercase;letter-spacing:.8px}.next div{margin-top:7px;font-size:20px;font-weight:650}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:26px 0}.card{padding:18px;border:1px solid var(--border);border-radius:8px;background:var(--soft)}.card strong{display:block;margin-bottom:5px;font:600 13px Consolas,"Courier New",monospace}.card p{margin:0;font-size:14px}.lessons{padding-left:22px;color:#c7d4e2}.lessons li{margin:8px 0}.next{margin-top:72px;padding-top:30px;border-top:1px solid var(--border)}.next small{color:var(--dim);font:12px Consolas,"Courier New",monospace;text-transform:uppercase;letter-spacing:.8px}.next div{margin-top:7px;font-size:20px;font-weight:650}
 footer{padding:34px 0 44px;border-top:1px solid var(--border);color:var(--dim);font-size:13px}.footer-inner{display:flex;justify-content:space-between;gap:20px}.motto{color:var(--softtext);font-family:Consolas,"Courier New",monospace}
 @media(max-width:980px){.layout{grid-template-columns:minmax(0,var(--article))}.toc{position:static;padding-bottom:20px;border-bottom:1px solid var(--border)}.toc nav{columns:2}}@media(max-width:700px){.container{width:min(calc(100% - 28px),var(--wide))}.hero{padding:56px 0 44px}.lead{font-size:18px}.layout{gap:36px;padding:38px 0 64px}.toc nav{columns:1}.grid{grid-template-columns:1fr}article h2{font-size:26px}.footer-inner{flex-direction:column}.nav .hide-small{display:none}}@media(max-width:480px){.brand-text{font-size:15px}.nav{display:none}pre{font-size:12px}}
 </style>
@@ -217,57 +217,10 @@ endp</code></pre></div><p>Scaling always starts from the original 96-DPI constan
     const mnemonics = new Set('mov movsx movzx lea push pop add sub imul mul idiv div inc dec neg not and or xor shl shr sar rol ror cmp test xchg call ret jmp je jne jz jnz jl jle jg jge jb jbe ja jae jc jnc js jns jo jno nop'.split(' '));
     const directives = new Set('proc endp uses format entry include section library readable writeable executable data import db dw dd dq du rb rw rd rq equ macro local if else end repeat align sizeof'.split(' '));
     const registers = new Set('rax rbx rcx rdx rsi rdi rbp rsp r8 r9 r10 r11 r12 r13 r14 r15 eax ebx ecx edx esi edi ebp esp r8d r9d r10d r11d r12d r13d r14d r15d ax bx cx dx si di bp sp al bl cl dl ah bh ch dh'.split(' '));
-
-    const escapeHtml = text => text
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
-
-    function splitComment(line) {
-        let quoted = false;
-        for (let i = 0; i < line.length; i++) {
-            if (line[i] === "'") quoted = !quoted;
-            if (line[i] === ';' && !quoted) return [line.slice(0, i), line.slice(i)];
-        }
-        return [line, ''];
-    }
-
-    function highlightLine(line) {
-        const [body, comment] = splitComment(line);
-        const tokenPattern = /'[^'\n]*'|\b(?:0[0-9A-Fa-f]+h|[0-9]+)\b|[.$A-Za-z_?@][.$A-Za-z0-9_?@]*/g;
-        let result = '';
-        let last = 0;
-        let match;
-
-        while ((match = tokenPattern.exec(body)) !== null) {
-            result += escapeHtml(body.slice(last, match.index));
-            const token = match[0];
-            const lower = token.toLowerCase();
-            const nextChar = body[match.index + token.length] || '';
-            let cls = '';
-
-            if (token.startsWith("'")) cls = 'tok-str';
-            else if (/^(?:0[0-9A-Fa-f]+h|[0-9]+)$/.test(token)) cls = 'tok-num';
-            else if (lower === 'invoke') cls = 'tok-invoke';
-            else if (mnemonics.has(lower)) cls = 'tok-mn';
-            else if (directives.has(lower)) cls = 'tok-dir';
-            else if (registers.has(lower)) cls = 'tok-reg';
-            else if (token.startsWith('.') || nextChar === ':') cls = 'tok-label';
-            else if (/^[A-Z][A-Z0-9_]*$/.test(token)) cls = 'tok-const';
-            else if (/^[A-Z][A-Za-z0-9]+$/.test(token)) cls = 'tok-api';
-
-            result += cls ? `<span class="${cls}">${escapeHtml(token)}</span>` : escapeHtml(token);
-            last = match.index + token.length;
-        }
-
-        result += escapeHtml(body.slice(last));
-        if (comment) result += `<span class="tok-comment">${escapeHtml(comment)}</span>`;
-        return result;
-    }
-
-    document.querySelectorAll('.codebox pre code').forEach(code => {
-        code.innerHTML = code.textContent.split('\n').map(highlightLine).join('\n');
-    });
+    const escapeHtml = text => text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    function splitComment(line){let quoted=false;for(let i=0;i<line.length;i++){if(line[i]==="'") quoted=!quoted;if(line[i]===';'&&!quoted)return[line.slice(0,i),line.slice(i)];}return[line,''];}
+    function highlightLine(line){const[body,comment]=splitComment(line);const tokenPattern=/'[^'\n]*'|\b(?:0[0-9A-Fa-f]+h|[0-9]+)\b|[.$A-Za-z_?@][.$A-Za-z0-9_?@]*/g;let result='';let last=0;let match;while((match=tokenPattern.exec(body))!==null){result+=escapeHtml(body.slice(last,match.index));const token=match[0];const lower=token.toLowerCase();const nextChar=body[match.index+token.length]||'';let cls='';if(token.startsWith("'"))cls='tok-str';else if(/^(?:0[0-9A-Fa-f]+h|[0-9]+)$/.test(token))cls='tok-num';else if(lower==='invoke')cls='tok-invoke';else if(mnemonics.has(lower))cls='tok-mn';else if(directives.has(lower))cls='tok-dir';else if(registers.has(lower))cls='tok-reg';else if(token.startsWith('.')||nextChar===':')cls='tok-label';else if(/^[A-Z][A-Z0-9_]*$/.test(token))cls='tok-const';else if(/^[A-Z][A-Za-z0-9]+$/.test(token))cls='tok-api';result+=cls?`<span class="${cls}">${escapeHtml(token)}</span>`:escapeHtml(token);last=match.index+token.length;}result+=escapeHtml(body.slice(last));if(comment)result+=`<span class="tok-comment">${escapeHtml(comment)}</span>`;return result;}
+    document.querySelectorAll('.codebox pre code').forEach(code=>{code.innerHTML=code.textContent.split('\n').map(highlightLine).join('\n');});
 })();
 </script>
 </body>
