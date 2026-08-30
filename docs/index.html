@@ -251,7 +251,7 @@ section{padding:82px 0}
         </a>
         <nav class="main-nav" aria-label="Main navigation">
             <a href="#graphics">GDI / GDI+</a>
-            <a href="#tutorials">Tutorials</a>
+            <a href="#examples">Examples</a>
             <a class="hide-small" href="https://github.com/Joch64ASM/FASM-Win64-Controls/discussions">Discussions</a>
             <a href="https://github.com/Joch64ASM/FASM-Win64-Controls">GitHub</a>
         </nav>
@@ -282,7 +282,7 @@ section{padding:82px 0}
                 <span class="badge">DPI Aware</span>
             </div>
             <div class="hero-actions">
-                <a class="button button-primary" href="#tutorials">Explore the tutorials</a>
+                <a class="button button-primary" href="#graphics">Choose a graphics track</a>
                 <a class="button" href="https://github.com/Joch64ASM/FASM-Win64-Controls">View source on GitHub</a>
             </div>
         </div>
@@ -327,67 +327,16 @@ section{padding:82px 0}
     </div>
 </section>
 
-<section id="tutorials" class="section-border">
+<section id="examples" class="section-border">
     <div class="container">
-        <p class="section-kicker">Tutorials</p>
-        <h2 class="section-title">Build native Windows programming one layer at a time.</h2>
+        <p class="section-kicker">Source Examples</p>
+        <h2 class="section-title">Practical controls built from the same native model.</h2>
         <p class="section-description">
-            Start with the window itself, then add painting, controls and custom drawing as separate visible steps.
-            Source-only control examples remain listed alongside the published tutorials.
+            The step-by-step GDI course now lives inside the GDI track above. These cards are larger project examples whose source is already available while dedicated tutorial tracks continue to grow.
         </p>
         <div class="tutorial-list">
-            <a class="tutorial-card" href="window/01-base-window-shell.html">
-                <div class="tutorial-index">01</div>
-                <div>
-                    <span class="tutorial-type">Window</span>
-                    <h3 class="tutorial-title">Creating a Native Win64 Window</h3>
-                    <p class="tutorial-description">Window class, WndProc, message loop, dark shell, native resizing and DPI-aware layout.</p>
-                </div>
-                <div class="tutorial-state available">read tutorial →</div>
-            </a>
-
-            <a class="tutorial-card" href="window/02-painting-text.html">
-                <div class="tutorial-index">02</div>
-                <div>
-                    <span class="tutorial-type">Window · GDI</span>
-                    <h3 class="tutorial-title">Painting Text with DrawTextW</h3>
-                    <p class="tutorial-description">Unicode text, application-owned HFONT objects, COLORREF, GDI state and DPI-scaled painting.</p>
-                </div>
-                <div class="tutorial-state available">read tutorial →</div>
-            </a>
-
-            <a class="tutorial-card" href="window/03-native-button-click-to-paint.html">
-                <div class="tutorial-index">03</div>
-                <div>
-                    <span class="tutorial-type">Button</span>
-                    <h3 class="tutorial-title">Native Button: Click to Paint</h3>
-                    <p class="tutorial-description">Create a real BUTTON HWND, receive WM_COMMAND / BN_CLICKED, change state and repaint the parent.</p>
-                </div>
-                <div class="tutorial-state available">read tutorial →</div>
-            </a>
-
-            <a class="tutorial-card" href="window/04-ownerdrawn-dark-button.html">
-                <div class="tutorial-index">04</div>
-                <div>
-                    <span class="tutorial-type">Button · Owner Draw</span>
-                    <h3 class="tutorial-title">Owner-Drawn Dark Button</h3>
-                    <p class="tutorial-description">Keep native button behavior while taking over appearance with BS_OWNERDRAW, WM_DRAWITEM and DRAWITEMSTRUCT.</p>
-                </div>
-                <div class="tutorial-state available">read tutorial →</div>
-            </a>
-
-            <a class="tutorial-card" href="listbox/05-dark-listbox-items-selection.html">
-                <div class="tutorial-index">05</div>
-                <div>
-                    <span class="tutorial-type">ListBox · Selection</span>
-                    <h3 class="tutorial-title">Dark ListBox: Items &amp; Selection</h3>
-                    <p class="tutorial-description">Reuse owner-draw, add control-owned items, receive LBN_SELCHANGE and query the native selection with LB_GETCURSEL and LB_GETTEXT.</p>
-                </div>
-                <div class="tutorial-state available">read tutorial →</div>
-            </a>
-
             <a class="tutorial-card" href="https://github.com/Joch64ASM/FASM-Win64-Controls/tree/main/ListBox">
-                <div class="tutorial-index">06</div>
+                <div class="tutorial-index">EX 01</div>
                 <div>
                     <span class="tutorial-type">ListBox</span>
                     <h3 class="tutorial-title">Owner-Drawn File &amp; PE Report</h3>
@@ -397,7 +346,7 @@ section{padding:82px 0}
             </a>
 
             <a class="tutorial-card" href="https://github.com/Joch64ASM/FASM-Win64-Controls/tree/main/TabControl">
-                <div class="tutorial-index">07</div>
+                <div class="tutorial-index">EX 02</div>
                 <div>
                     <span class="tutorial-type">TabControl</span>
                     <h3 class="tutorial-title">Native Pages &amp; Integrated Controls</h3>
