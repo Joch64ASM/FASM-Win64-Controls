@@ -6,20 +6,52 @@
 <meta name="theme-color" content="#0d1117">
 <title>GDI Tutorials | FASM Win64 Controls</title>
 <style>
-:root{--bg:#0d1117;--soft:#111820;--panel:#151c24;--border:#293442;--border2:#354354;--text:#e6edf3;--article:#c7d4e2;--dim:#768390;--accent:#58a6ff;--wide:1120px}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top center,#162231 0,var(--bg) 420px);color:var(--text);font:16px/1.7 "Segoe UI",system-ui,sans-serif}a{color:inherit}.container{width:min(calc(100% - 40px),var(--wide));margin:auto}.site-header{border-bottom:1px solid var(--border);background:rgba(13,17,23,.92)}.header-inner{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px}.brand{display:flex;align-items:center;gap:13px;text-decoration:none}.brand-mark{width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--border2);border-radius:8px;background:var(--panel);color:var(--accent);font:700 17px Consolas,monospace}.brand-text{font-size:17px;font-weight:650}.nav{display:flex;gap:6px}.nav a{padding:8px 12px;border-radius:6px;color:#a9b4c0;text-decoration:none;font-size:14px}.nav a:hover{color:var(--text);background:var(--panel)}.hero{padding:90px 0 60px;border-bottom:1px solid var(--border)}.eyebrow{color:var(--accent);font:600 13px Consolas,monospace;letter-spacing:.9px;text-transform:uppercase}.hero h1{margin:12px 0 18px;font-size:clamp(44px,7vw,72px);line-height:1.05}.lead{max-width:860px;margin:0;color:var(--article);font-size:20px}.content{padding:64px 0 90px}.track{display:grid;gap:16px}.card{display:grid;grid-template-columns:80px 1fr auto;gap:22px;align-items:center;padding:24px;border:1px solid var(--border);border-radius:10px;background:var(--soft);text-decoration:none;transition:background .12s,border-color .12s,transform .12s}.card:hover{background:#19232e;border-color:var(--border2);transform:translateY(-1px)}.num{color:var(--accent);font:600 14px Consolas,monospace}.type{color:var(--dim);font:12px Consolas,monospace;text-transform:uppercase;letter-spacing:.8px}.card h2{margin:3px 0 5px;font-size:19px}.card p{margin:0;color:#a9b4c0}.go{color:var(--accent);font:13px Consolas,monospace;white-space:nowrap}.note{margin-top:28px;padding:20px 22px;border-left:3px solid var(--accent);background:var(--soft);color:var(--article)}footer{padding:32px 0 42px;border-top:1px solid var(--border);color:var(--dim);font-size:13px}@media(max-width:700px){.card{grid-template-columns:48px 1fr}.go{grid-column:2}.nav{display:none}}
+:root{--bg:#0d1117;--soft:#111820;--panel:#151c24;--border:#293442;--border2:#354354;--text:#e6edf3;--article:#c7d4e2;--dim:#768390;--accent:#58a6ff;--wide:1120px}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at top center,#162231 0,var(--bg) 420px);color:var(--text);font:16px/1.7 "Segoe UI",system-ui,sans-serif}
+a{color:inherit}.container{width:min(calc(100% - 40px),var(--wide));margin:auto}
+.site-header{border-bottom:1px solid var(--border);background:rgba(13,17,23,.92)}
+.header-inner{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{display:flex;align-items:center;gap:13px;text-decoration:none}.brand-mark{width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--border2);border-radius:8px;background:var(--panel);color:var(--accent);font:700 17px Consolas,monospace}.brand-text{font-size:17px;font-weight:650}
+.nav{display:flex;gap:6px}.nav a{padding:8px 12px;border-radius:6px;color:#a9b4c0;text-decoration:none;font-size:14px}.nav a:hover{color:var(--text);background:var(--panel)}
+.hero{padding:90px 0 60px;border-bottom:1px solid var(--border)}.eyebrow{color:var(--accent);font:600 13px Consolas,monospace;letter-spacing:.9px;text-transform:uppercase}.hero h1{margin:12px 0 18px;font-size:clamp(44px,7vw,72px);line-height:1.05}.lead{max-width:860px;margin:0;color:var(--article);font-size:20px}
+.content{padding:64px 0 90px}.track{display:grid;gap:16px}
+.group{margin-top:66px;padding-top:48px;border-top:1px solid var(--border)}
+.group-kicker{margin:0 0 8px;color:var(--accent);font:600 13px Consolas,monospace;letter-spacing:.9px;text-transform:uppercase}
+.group-title{margin:0 0 12px;font-size:32px;line-height:1.2}
+.group-lead{max-width:800px;margin:0 0 28px;color:#a9b4c0;font-size:17px}
+.card{display:grid;grid-template-columns:80px 1fr auto;gap:22px;align-items:center;padding:24px;border:1px solid var(--border);border-radius:10px;background:var(--soft);text-decoration:none;transition:background .12s,border-color .12s,transform .12s}.card:hover{background:#19232e;border-color:var(--border2);transform:translateY(-1px)}
+.num{color:var(--accent);font:600 14px Consolas,monospace}.type{color:var(--dim);font:12px Consolas,monospace;text-transform:uppercase;letter-spacing:.8px}.card h2{margin:3px 0 5px;font-size:19px}.card p{margin:0;color:#a9b4c0}.go{color:var(--accent);font:13px Consolas,monospace;white-space:nowrap}
+.note{margin-top:28px;padding:20px 22px;border-left:3px solid var(--accent);background:var(--soft);color:var(--article)}
+footer{padding:32px 0 42px;border-top:1px solid var(--border);color:var(--dim);font-size:13px}
+@media(max-width:700px){.card{grid-template-columns:48px 1fr}.go{grid-column:2}.nav{display:none}}
 </style>
 </head>
 <body>
-<header class="site-header"><div class="container header-inner"><a class="brand" href="../"><span class="brand-mark">64</span><span class="brand-text">FASM Win64 Controls</span></a><nav class="nav"><a href="../#graphics">GDI / GDI+</a><a href="../#examples">Examples</a><a href="https://github.com/Joch64ASM/FASM-Win64-Controls">GitHub</a></nav></div></header>
+<header class="site-header"><div class="container header-inner"><a class="brand" href="../"><span class="brand-mark">64</span><span class="brand-text">FASM Win64 Controls</span></a><nav class="nav"><a href="../#graphics">GDI / GDI+</a><a href="../gdiplus/">GDI+</a><a href="https://github.com/Joch64ASM/FASM-Win64-Controls">GitHub</a></nav></div></header>
 <main>
 <section class="hero"><div class="container"><div class="eyebrow">Graphics Track · GDI</div><h1>GDI Tutorials</h1><p class="lead">The complete GDI learning path lives here. Start with the native borderless window, then add text, interaction, owner-drawn controls and ListBox state while keeping the same Win64 message and ownership model underneath.</p></div></section>
-<section class="content"><div class="container"><div class="track">
+<section class="content"><div class="container">
+<div class="track">
 <a class="card" href="../window/01-base-window-shell.html"><div class="num">01</div><div><div class="type">Window foundation</div><h2>Building the Base Win64 Window Shell</h2><p>Create the borderless native window, paint the dark shell and keep native move, resize and DPI behavior underneath.</p></div><div class="go">read tutorial →</div></a>
 <a class="card" href="../window/02-painting-text.html"><div class="num">02</div><div><div class="type">GDI text</div><h2>Painting Text with DrawTextW</h2><p>Use an HDC, HFONT, COLORREF and DrawTextW inside the window's paint cycle.</p></div><div class="go">read tutorial →</div></a>
 <a class="card" href="../window/03-native-button-click-to-paint.html"><div class="num">03</div><div><div class="type">Button · message &amp; state</div><h2>Native Button: Click to Paint</h2><p>Create a real BUTTON HWND, receive WM_COMMAND / BN_CLICKED, change application state and repaint the window.</p></div><div class="go">read tutorial →</div></a>
 <a class="card" href="../window/04-ownerdrawn-dark-button.html"><div class="num">04</div><div><div class="type">Button · owner draw</div><h2>Owner-Drawn Dark Button</h2><p>Keep native button behavior while taking over its appearance with BS_OWNERDRAW, WM_DRAWITEM and DRAWITEMSTRUCT.</p></div><div class="go">read tutorial →</div></a>
 <a class="card" href="../listbox/05-dark-listbox-items-selection.html"><div class="num">05</div><div><div class="type">ListBox · items &amp; selection</div><h2>Dark ListBox: Items &amp; Selection</h2><p>Reuse owner-draw, add control-owned items, receive LBN_SELCHANGE and query the native selection with LB_GETCURSEL and LB_GETTEXT.</p></div><div class="go">read tutorial →</div></a>
-</div><div class="note">These are the published GDI course tutorials. New GDI lessons will be added here instead of being duplicated on the main page.</div></div></section>
+</div>
+<div class="note">These are the published GDI course tutorials. New GDI lessons will be added here instead of being duplicated on the main page.</div>
+
+<div class="group">
+<p class="group-kicker">Practical GDI Examples</p>
+<h2 class="group-title">Practical controls built from the same native model.</h2>
+<p class="group-lead">These larger examples use the same GDI, owner-draw and custom-draw ideas from the lessons above, but combine them into more complete Win64 tools.</p>
+<div class="track">
+<a class="card" href="https://github.com/Joch64ASM/FASM-Win64-Controls/tree/main/ListBox"><div class="num">EX 01</div><div><div class="type">ListBox · GDI owner draw</div><h2>Owner-Drawn File &amp; PE Report</h2><p>Unicode rows, owner drawing, drag-and-drop, horizontal scrolling and PE information.</p></div><div class="go">source available →</div></a>
+<a class="card" href="https://github.com/Joch64ASM/FASM-Win64-Controls/tree/main/TabControl"><div class="num">EX 02</div><div><div class="type">TabControl · integrated controls</div><h2>Native Pages &amp; Integrated Controls</h2><p>Owner-drawn tabs, page windows, nested controls, SysLink integration and DPI-aware layout.</p></div><div class="go">source available →</div></a>
+<div class="card"><div class="num">++</div><div><div class="type">Coming next</div><h2>ListView · TreeView · StatusBar · Toolbar</h2><p>More native controls and their GDI/custom-draw paths will be added as the project grows.</p></div><div class="go">work in progress</div></div>
+</div>
+</div>
+</div></section>
 </main>
 <footer><div class="container">Pure FASM x64 · Native Win32 · GDI</div></footer>
 </body></html>
