@@ -164,36 +164,6 @@ section{padding:82px 0}
 .graphics-arrow{font-size:22px;transition:transform 140ms ease}
 .graphics-card:hover .graphics-arrow{transform:translateX(4px)}
 
-.tutorial-list{display:grid;gap:14px}
-.tutorial-card{
-    display:grid;grid-template-columns:82px 1fr auto;align-items:center;
-    gap:22px;padding:22px 24px;
-    border:1px solid var(--border);border-radius:10px;
-    background:var(--background-soft);text-decoration:none;
-    transition:background 120ms ease,border-color 120ms ease,transform 120ms ease;
-}
-.tutorial-card:hover{
-    background:var(--panel-hover);border-color:var(--border-light);
-    transform:translateY(-1px);
-}
-.tutorial-index{
-    color:var(--accent);
-    font:600 15px Consolas,"Courier New",monospace;
-}
-.tutorial-type{
-    display:block;margin-bottom:3px;color:var(--text-dim);
-    font:12px Consolas,"Courier New",monospace;
-    text-transform:uppercase;letter-spacing:.9px;
-}
-.tutorial-title{margin:0;color:var(--text);font-size:18px;font-weight:600}
-.tutorial-description{margin:4px 0 0;color:var(--text-soft);font-size:14px}
-.tutorial-state{
-    color:var(--text-dim);
-    font:13px Consolas,"Courier New",monospace;
-    white-space:nowrap;
-}
-.tutorial-state.available{color:var(--accent)}
-
 .code-callout{
     padding:28px;border:1px solid var(--border);border-left:3px solid var(--accent);
     border-radius:8px;background:#0b1016;
@@ -224,8 +194,6 @@ section{padding:82px 0}
     .hero-description{font-size:18px}
     .graphics-grid{grid-template-columns:1fr}
     .graphics-card{min-height:300px}
-    .tutorial-card{grid-template-columns:58px 1fr;gap:14px}
-    .tutorial-state{grid-column:2;margin-top:4px}
     .footer-inner{flex-direction:column;align-items:flex-start}
 }
 @media(max-width:520px){
@@ -238,7 +206,6 @@ section{padding:82px 0}
     .section-title{font-size:28px}
     .graphics-card{padding:28px;min-height:280px}
     .graphics-card h3{font-size:36px}
-    .tutorial-card{padding:19px 18px}
 }
 </style>
 </head>
@@ -251,7 +218,6 @@ section{padding:82px 0}
         </a>
         <nav class="main-nav" aria-label="Main navigation">
             <a href="#graphics">GDI / GDI+</a>
-            <a href="#examples">Examples</a>
             <a class="hide-small" href="https://github.com/Joch64ASM/FASM-Win64-Controls/discussions">Discussions</a>
             <a href="https://github.com/Joch64ASM/FASM-Win64-Controls">GitHub</a>
         </nav>
@@ -327,47 +293,6 @@ section{padding:82px 0}
     </div>
 </section>
 
-<section id="examples" class="section-border">
-    <div class="container">
-        <p class="section-kicker">Source Examples</p>
-        <h2 class="section-title">Practical controls built from the same native model.</h2>
-        <p class="section-description">
-            The step-by-step GDI course now lives inside the GDI track above. These cards are larger project examples whose source is already available while dedicated tutorial tracks continue to grow.
-        </p>
-        <div class="tutorial-list">
-            <a class="tutorial-card" href="https://github.com/Joch64ASM/FASM-Win64-Controls/tree/main/ListBox">
-                <div class="tutorial-index">EX 01</div>
-                <div>
-                    <span class="tutorial-type">ListBox</span>
-                    <h3 class="tutorial-title">Owner-Drawn File &amp; PE Report</h3>
-                    <p class="tutorial-description">Unicode rows, owner drawing, drag-and-drop, horizontal scrolling and PE information.</p>
-                </div>
-                <div class="tutorial-state available">source available →</div>
-            </a>
-
-            <a class="tutorial-card" href="https://github.com/Joch64ASM/FASM-Win64-Controls/tree/main/TabControl">
-                <div class="tutorial-index">EX 02</div>
-                <div>
-                    <span class="tutorial-type">TabControl</span>
-                    <h3 class="tutorial-title">Native Pages &amp; Integrated Controls</h3>
-                    <p class="tutorial-description">Owner-drawn tabs, page windows, nested controls, SysLink integration and DPI-aware layout.</p>
-                </div>
-                <div class="tutorial-state available">source available →</div>
-            </a>
-
-            <div class="tutorial-card">
-                <div class="tutorial-index">++</div>
-                <div>
-                    <span class="tutorial-type">Coming next</span>
-                    <h3 class="tutorial-title">ListView · TreeView · StatusBar · Toolbar</h3>
-                    <p class="tutorial-description">More native Win64 controls will be added as the project grows.</p>
-                </div>
-                <div class="tutorial-state">work in progress</div>
-            </div>
-        </div>
-    </div>
-</section>
-
 <section class="section-border">
     <div class="container">
         <p class="section-kicker">The rule</p>
@@ -379,8 +304,8 @@ section{padding:82px 0}
         </p>
         <div class="code-callout">
             <span class="comment">; The project in one sentence:</span><br>
-            Pure FASM x64.
-            Native Win32.
+            Pure FASM x64.<br>
+            Native Win32.<br>
             No frameworks.
         </div>
     </div>
