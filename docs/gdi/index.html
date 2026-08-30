@@ -14,41 +14,51 @@ a{color:inherit}.container{width:min(calc(100% - 40px),var(--wide));margin:auto}
 .header-inner{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px}
 .brand{display:flex;align-items:center;gap:13px;text-decoration:none}.brand-mark{width:38px;height:38px;display:grid;place-items:center;border:1px solid var(--border2);border-radius:8px;background:var(--panel);color:var(--accent);font:700 17px Consolas,monospace}.brand-text{font-size:17px;font-weight:650}
 .nav{display:flex;gap:6px}.nav a{padding:8px 12px;border-radius:6px;color:#a9b4c0;text-decoration:none;font-size:14px}.nav a:hover{color:var(--text);background:var(--panel)}
-.hero{padding:90px 0 60px;border-bottom:1px solid var(--border)}.eyebrow{color:var(--accent);font:600 13px Consolas,monospace;letter-spacing:.9px;text-transform:uppercase}.hero h1{margin:12px 0 18px;font-size:clamp(44px,7vw,72px);line-height:1.05}.lead{max-width:860px;margin:0;color:var(--article);font-size:20px}
+.hero{padding:76px 0 54px;border-bottom:1px solid var(--border)}
+.eyebrow{color:var(--accent);font:700 14px Consolas,monospace;letter-spacing:.9px;text-transform:uppercase}
+.hero h1{max-width:900px;margin:13px 0 18px;font-size:clamp(38px,5vw,54px);line-height:1.08;letter-spacing:-1.2px}
+.lead{max-width:930px;margin:0;color:var(--article);font-size:22px;line-height:1.65}
+.scope{max-width:930px;margin-top:28px;padding:22px 24px;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--soft);color:var(--article);font-size:18px;line-height:1.72}
+.scope strong{color:var(--text)}
 .content{padding:64px 0 90px}.track{display:grid;gap:16px}
 .group{margin-top:66px;padding-top:48px;border-top:1px solid var(--border)}
-.group-kicker{margin:0 0 8px;color:var(--accent);font:600 13px Consolas,monospace;letter-spacing:.9px;text-transform:uppercase}
-.group-title{margin:0 0 12px;font-size:32px;line-height:1.2}
-.group-lead{max-width:800px;margin:0 0 28px;color:#a9b4c0;font-size:17px}
-.card{display:grid;grid-template-columns:80px 1fr auto;gap:22px;align-items:center;padding:24px;border:1px solid var(--border);border-radius:10px;background:var(--soft);text-decoration:none;transition:background .12s,border-color .12s,transform .12s}.card:hover{background:#19232e;border-color:var(--border2);transform:translateY(-1px)}
-.num{color:var(--accent);font:600 14px Consolas,monospace}.type{color:var(--dim);font:12px Consolas,monospace;text-transform:uppercase;letter-spacing:.8px}.card h2{margin:3px 0 5px;font-size:19px}.card p{margin:0;color:#a9b4c0}.go{color:var(--accent);font:13px Consolas,monospace;white-space:nowrap}
-.note{margin-top:28px;padding:20px 22px;border-left:3px solid var(--accent);background:var(--soft);color:var(--article)}
+.group-kicker{margin:0 0 8px;color:var(--accent);font:700 14px Consolas,monospace;letter-spacing:.9px;text-transform:uppercase}
+.group-title{margin:0 0 12px;font-size:30px;line-height:1.25}
+.group-lead{max-width:860px;margin:0 0 28px;color:#a9b4c0;font-size:18px;line-height:1.7}
+.card{display:grid;grid-template-columns:80px 1fr auto;gap:22px;align-items:center;padding:27px 26px;border:1px solid var(--border);border-radius:10px;background:var(--soft);text-decoration:none;transition:background .12s,border-color .12s,transform .12s}.card:hover{background:#19232e;border-color:var(--border2);transform:translateY(-1px)}
+.num{color:var(--accent);font:700 15px Consolas,monospace}.type{color:var(--dim);font:13px Consolas,monospace;text-transform:uppercase;letter-spacing:.8px}.card h2{margin:4px 0 7px;font-size:21px;line-height:1.3}.card p{max-width:760px;margin:0;color:#a9b4c0;font-size:16px;line-height:1.65}.go{color:var(--accent);font:600 14px Consolas,monospace;white-space:nowrap}
+.note{margin-top:28px;padding:20px 22px;border-left:3px solid var(--accent);background:var(--soft);color:var(--article);font-size:16px}
 footer{padding:32px 0 42px;border-top:1px solid var(--border);color:var(--dim);font-size:13px}
-@media(max-width:700px){.card{grid-template-columns:48px 1fr}.go{grid-column:2}.nav{display:none}}
+@media(max-width:700px){.hero{padding:58px 0 44px}.lead{font-size:19px}.scope{font-size:16px}.card{grid-template-columns:48px 1fr}.go{grid-column:2}.nav{display:none}}
 </style>
 </head>
 <body>
 <header class="site-header"><div class="container header-inner"><a class="brand" href="../"><span class="brand-mark">64</span><span class="brand-text">FASM Win64 Controls</span></a><nav class="nav"><a href="../#graphics">GDI / GDI+</a><a href="../gdiplus/">GDI+</a><a href="https://github.com/Joch64ASM/FASM-Win64-Controls">GitHub</a></nav></div></header>
 <main>
-<section class="hero"><div class="container"><div class="eyebrow">Graphics Track · GDI</div><h1>GDI Tutorials</h1><p class="lead">The complete GDI learning path lives here. Start with the native borderless window, then add text, interaction, owner-drawn controls and ListBox state while keeping the same Win64 message and ownership model underneath.</p></div></section>
+<section class="hero"><div class="container">
+<div class="eyebrow">Graphics Track · GDI</div>
+<h1>Draw the complete Win64 interface yourself with GDI.</h1>
+<p class="lead">This is not a course about accepting the default look of standard Windows controls. The goal is to take responsibility for the pixels the user sees: the dark window surface, title area, borders, text, buttons, selection rows and the visual treatment of the controls we add.</p>
+<div class="scope"><strong>Native behavior stays underneath.</strong> USER32 still gives us HWNDs, messages, keyboard input, mouse capture, hit-testing, focus and control notifications where they are useful. GDI is where we take over the visible interface. A native control can still exist as a real child window while its appearance is completely drawn by our own code.</div>
+</div></section>
 <section class="content"><div class="container">
 <div class="track">
-<a class="card" href="../window/01-base-window-shell.html"><div class="num">01</div><div><div class="type">Window foundation</div><h2>Building the Base Win64 Window Shell</h2><p>Create the borderless native window, paint the dark shell and keep native move, resize and DPI behavior underneath.</p></div><div class="go">read tutorial →</div></a>
-<a class="card" href="../window/02-painting-text.html"><div class="num">02</div><div><div class="type">GDI text</div><h2>Painting Text with DrawTextW</h2><p>Use an HDC, HFONT, COLORREF and DrawTextW inside the window's paint cycle.</p></div><div class="go">read tutorial →</div></a>
-<a class="card" href="../window/03-native-button-click-to-paint.html"><div class="num">03</div><div><div class="type">Button · message &amp; state</div><h2>Native Button: Click to Paint</h2><p>Create a real BUTTON HWND, receive WM_COMMAND / BN_CLICKED, change application state and repaint the window.</p></div><div class="go">read tutorial →</div></a>
-<a class="card" href="../window/04-ownerdrawn-dark-button.html"><div class="num">04</div><div><div class="type">Button · owner draw</div><h2>Owner-Drawn Dark Button</h2><p>Keep native button behavior while taking over its appearance with BS_OWNERDRAW, WM_DRAWITEM and DRAWITEMSTRUCT.</p></div><div class="go">read tutorial →</div></a>
-<a class="card" href="../listbox/05-dark-listbox-items-selection.html"><div class="num">05</div><div><div class="type">ListBox · items &amp; selection</div><h2>Dark ListBox: Items &amp; Selection</h2><p>Reuse owner-draw, add control-owned items, receive LBN_SELCHANGE and query the native selection with LB_GETCURSEL and LB_GETTEXT.</p></div><div class="go">read tutorial →</div></a>
+<a class="card" href="../window/01-base-window-shell.html"><div class="num">01</div><div><div class="type">Custom window shell</div><h2>Build and Paint the Borderless Win64 Window</h2><p>Create the WS_POPUP shell and draw the dark client area and window chrome ourselves. The lesson also shows how custom hit-testing lets USER32 keep its native move and resize loops even though the normal Windows frame is gone.</p></div><div class="go">read tutorial →</div></a>
+<a class="card" href="../window/02-painting-text.html"><div class="num">02</div><div><div class="type">Direct GDI text rendering</div><h2>Paint Text into Our Own Window Surface</h2><p>Move beyond a blank custom shell by selecting our own HFONT into the paint HDC, choosing the text color and rendering Unicode text with DrawTextW during WM_PAINT.</p></div><div class="go">read tutorial →</div></a>
+<a class="card" href="../window/03-native-button-click-to-paint.html"><div class="num">03</div><div><div class="type">Native behavior before custom appearance</div><h2>Learn the Button Message Contract Before We Redraw It</h2><p>This is the deliberate bridge lesson: keep a native BUTTON visible for one step so the WM_COMMAND / BN_CLICKED message path, application state and repaint model are understood before we replace the button's visual appearance ourselves.</p></div><div class="go">read tutorial →</div></a>
+<a class="card" href="../window/04-ownerdrawn-dark-button.html"><div class="num">04</div><div><div class="type">Full custom button appearance</div><h2>Draw the Button Ourselves with WM_DRAWITEM</h2><p>The BUTTON remains a real native HWND for mouse, keyboard, focus and click behavior, but the default Windows look disappears. Our code draws the face, border, text, pressed state and focus cue using the HDC supplied through DRAWITEMSTRUCT.</p></div><div class="go">read tutorial →</div></a>
+<a class="card" href="../listbox/05-dark-listbox-items-selection.html"><div class="num">05</div><div><div class="type">Custom ListBox rows &amp; selection</div><h2>Extend the Same Drawing Model to a ListBox</h2><p>Reuse the owner-draw model for an entire collection of rows. The native ListBox still owns its item collection and selection state, while our GDI code draws every row, selected appearance, text and focus feedback.</p></div><div class="go">read tutorial →</div></a>
 </div>
-<div class="note">These are the published GDI course tutorials. New GDI lessons will be added here instead of being duplicated on the main page.</div>
+<div class="note">The course keeps moving in this direction: preserve the parts of Win32 that are useful for native behavior, but take control of the visible interface instead of settling for the standard Windows appearance.</div>
 
 <div class="group">
 <p class="group-kicker">Practical GDI Examples</p>
-<h2 class="group-title">Practical controls built from the same native model.</h2>
-<p class="group-lead">These larger examples use the same GDI, owner-draw and custom-draw ideas from the lessons above, but combine them into more complete Win64 tools.</p>
+<h2 class="group-title">Complete interfaces built from the same custom-drawing model.</h2>
+<p class="group-lead">These are not isolated control demos. They combine the drawing, message, state and ownership ideas from the lessons above into larger native Win64 tools whose visible interface is styled and painted by our own code.</p>
 <div class="track">
-<a class="card" href="https://github.com/Joch64ASM/FASM-Win64-Controls/tree/main/ListBox"><div class="num">EX 01</div><div><div class="type">ListBox · GDI owner draw</div><h2>Owner-Drawn File &amp; PE Report</h2><p>Unicode rows, owner drawing, drag-and-drop, horizontal scrolling and PE information.</p></div><div class="go">source available →</div></a>
-<a class="card" href="https://github.com/Joch64ASM/FASM-Win64-Controls/tree/main/TabControl"><div class="num">EX 02</div><div><div class="type">TabControl · integrated controls</div><h2>Native Pages &amp; Integrated Controls</h2><p>Owner-drawn tabs, page windows, nested controls, SysLink integration and DPI-aware layout.</p></div><div class="go">source available →</div></a>
-<div class="card"><div class="num">++</div><div><div class="type">Coming next</div><h2>ListView · TreeView · StatusBar · Toolbar</h2><p>More native controls and their GDI/custom-draw paths will be added as the project grows.</p></div><div class="go">work in progress</div></div>
+<a class="card" href="https://github.com/Joch64ASM/FASM-Win64-Controls/tree/main/ListBox"><div class="num">EX 01</div><div><div class="type">Custom-drawn report interface</div><h2>Owner-Drawn File &amp; PE Report</h2><p>Turn a native ListBox into a dark custom report surface with Unicode rows, owner drawing, drag-and-drop, horizontal scrolling and PE information instead of relying on the stock ListBox appearance.</p></div><div class="go">source available →</div></a>
+<a class="card" href="https://github.com/Joch64ASM/FASM-Win64-Controls/tree/main/TabControl"><div class="num">EX 02</div><div><div class="type">Custom-drawn multi-page interface</div><h2>Owner-Drawn Tabs with Integrated Controls</h2><p>Build a larger dark application surface with owner-drawn tabs, page windows and integrated controls such as the process ListView and filesystem TreeView while keeping native Win64 behavior underneath.</p></div><div class="go">source available →</div></a>
+<div class="card"><div class="num">++</div><div><div class="type">Coming next</div><h2>ListView · TreeView · StatusBar · Toolbar</h2><p>Each control will be approached with the same question: which behavior should Windows keep, and which visible parts should our own GDI/custom-draw code take over?</p></div><div class="go">work in progress</div></div>
 </div>
 </div>
 </div></section>
