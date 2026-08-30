@@ -126,18 +126,22 @@ section{padding:82px 0}
     text-transform:uppercase;letter-spacing:1px;
 }
 .section-title{margin:0 0 12px;font-size:34px;line-height:1.2;letter-spacing:-.7px}
-.section-description{max-width:720px;margin:0 0 38px;color:var(--text-soft);font-size:17px}
-.principles{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.principle{
-    padding:24px;border:1px solid var(--border);border-radius:10px;
+.section-description{max-width:760px;margin:0 0 38px;color:var(--text-soft);font-size:17px}
+.graphics-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.graphics-card{
+    padding:26px;border:1px solid var(--border);border-radius:10px;
     background:var(--background-soft);
 }
-.principle-number{
+.graphics-number{
     margin-bottom:18px;color:var(--accent);
     font:13px Consolas,"Courier New",monospace;
 }
-.principle h3{margin:0 0 8px;font-size:18px}
-.principle p{margin:0;color:var(--text-soft);font-size:15px}
+.graphics-card h3{margin:0 0 8px;font-size:20px}
+.graphics-card p{margin:0;color:var(--text-soft);font-size:15px}
+.graphics-topics{
+    margin-top:18px;color:var(--code);
+    font:13px/1.7 Consolas,"Courier New",monospace;
+}
 
 .tutorial-list{display:grid;gap:14px}
 .tutorial-card{
@@ -196,7 +200,7 @@ section{padding:82px 0}
     .hero-art img{max-width:320px}
     .hero h1{letter-spacing:-1.5px}
     .hero-description{font-size:18px}
-    .principles{grid-template-columns:1fr}
+    .graphics-grid{grid-template-columns:1fr}
     .tutorial-card{grid-template-columns:58px 1fr;gap:14px}
     .tutorial-state{grid-column:2;margin-top:4px}
     .footer-inner{flex-direction:column;align-items:flex-start}
@@ -221,6 +225,7 @@ section{padding:82px 0}
             <span class="brand-text">FASM Win64 Controls</span>
         </a>
         <nav class="main-nav" aria-label="Main navigation">
+            <a href="#graphics">GDI / GDI+</a>
             <a href="#tutorials">Tutorials</a>
             <a class="hide-small" href="https://github.com/Joch64ASM/FASM-Win64-Controls/discussions">Discussions</a>
             <a href="https://github.com/Joch64ASM/FASM-Win64-Controls">GitHub</a>
@@ -245,6 +250,8 @@ section{padding:82px 0}
                 <span class="badge">x86-64</span>
                 <span class="badge">Win64</span>
                 <span class="badge">Win32 API</span>
+                <span class="badge">GDI</span>
+                <span class="badge">GDI+</span>
                 <span class="badge">Unicode</span>
                 <span class="badge">Common Controls</span>
                 <span class="badge">DPI Aware</span>
@@ -265,30 +272,35 @@ section{padding:82px 0}
     </div>
 </section>
 
-<section class="section-border">
+<section id="graphics" class="section-border">
     <div class="container">
-        <p class="section-kicker">Philosophy</p>
-        <h2 class="section-title">Understand the API, not just the example.</h2>
+        <p class="section-kicker">Graphics</p>
+        <h2 class="section-title">GDI &amp; GDI+ — both, from native FASM x64.</h2>
         <p class="section-description">
-            Every example is intended to compile, run and teach.
-            The project stays close to Windows itself rather than
-            hiding the operating system behind a framework.
+            Start with classic GDI and the HDC-based Win32 painting model,
+            then move into GDI+ for smoother, antialiased graphics.
+            Both stay close to the native Windows APIs — no GUI framework in between.
         </p>
-        <div class="principles">
-            <article class="principle">
-                <div class="principle-number">01 / NATIVE</div>
-                <h3>No GUI framework</h3>
-                <p>Native Win32 windows, messages, controls, GDI and Common Controls directly from FASM x64.</p>
+        <div class="graphics-grid">
+            <article class="graphics-card">
+                <div class="graphics-number">01 / GDI</div>
+                <h3>Classic Win32 Drawing</h3>
+                <p>
+                    The foundation used throughout the control tutorials:
+                    paint cycles, device contexts, fonts, brushes, pens,
+                    text and owner-drawn controls.
+                </p>
+                <div class="graphics-topics">BeginPaint · HDC · DrawTextW · HFONT · HBRUSH · HPEN · COLORREF</div>
             </article>
-            <article class="principle">
-                <div class="principle-number">02 / EXPLAINED</div>
-                <h3>Why Windows does it</h3>
-                <p>Message routing, ownership, notification structures, painting and ABI rules are explained instead of treated as magic.</p>
-            </article>
-            <article class="principle">
-                <div class="principle-number">03 / MODERN</div>
-                <h3>Win64 first</h3>
-                <p>Unicode APIs, the Windows x64 calling convention, DPI awareness and modern native control techniques.</p>
+            <article class="graphics-card">
+                <div class="graphics-number">02 / GDI+</div>
+                <h3>Antialiased Native Graphics</h3>
+                <p>
+                    Build on the same Win64 window/message model with GDI+:
+                    smoother vector drawing, paths, brushes and higher-quality
+                    text and shape rendering from pure FASM x64.
+                </p>
+                <div class="graphics-topics">GdiplusStartup · Graphics · Pen · Brush · DrawString · Smoothing</div>
             </article>
         </div>
     </div>
